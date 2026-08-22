@@ -10,64 +10,62 @@
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=Manrope:wght@600;800&display=swap" rel="stylesheet">
 <style>
 :root{
-  --ink:#0B1A3A; --ink2:#22375E; --muted:#64789B; --line:#DCE6F5;
+  --ink:#0B1A3A; --muted:#64789B; --line:#DCE6F5; --hair:#EEF3FA;
   --paper:#F4F7FC; --card:#FFFFFF;
-  --m1:#1565D8; --m1b:#2B8FFF;      /* 第一個月 藍 */
-  --m2:#0E7A5B; --m2b:#19A87D;      /* 第二個月 綠 */
-  --m3:#6B2FB5; --m3b:#8B5CF6;      /* 第三個月 紫 */
-  --accent:var(--m1); --accentB:var(--m1b);
-  --up:#0E7A5B; --down:#C4462A; --flat:#8896AE;
+  --m1:#1565D8; --m2:#0E7A5B; --m3:#6B2FB5;
+  --accent:#1565D8;
+  --up:#0E7A5B; --down:#C4462A; --flat:#8896AE; --warn:#E4572E;
   --r:16px;
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 body{margin:0;background:var(--paper);color:var(--ink);line-height:1.6;
   font-family:"Noto Sans TC","Microsoft JhengHei",system-ui,sans-serif}
 .num{font-family:Manrope,"Noto Sans TC",sans-serif;font-variant-numeric:tabular-nums}
-
-/* header */
-header{background:linear-gradient(135deg,#0B1A3A 0%,#16305C 55%,var(--accent) 140%);
-  color:#fff;padding:26px 0 22px;transition:background .5s}
 .wrap{max-width:1180px;margin:0 auto;padding:0 18px}
+
+/* ---------- header ---------- */
+header{background:linear-gradient(135deg,#0B1A3A 0%,#16305C 55%,var(--accent) 145%);
+  color:#fff;padding:26px 0 64px;transition:background .5s}
+.hbar{display:flex;justify-content:space-between;align-items:flex-start;gap:18px;flex-wrap:wrap}
 .brand{font-size:11.5px;font-weight:700;letter-spacing:.18em;color:#9FC0EF;margin-bottom:8px}
-header h1{margin:0 0 4px;font-size:clamp(19px,3.4vw,26px);font-weight:900;letter-spacing:-.01em}
+header h1{margin:0 0 6px;font-size:clamp(19px,3.2vw,26px);font-weight:900;letter-spacing:-.01em}
 header p{margin:0;font-size:13px;color:#B9CDE9}
-.hbar{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap}
-.refresh{background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.3);color:#fff;
-  font-family:inherit;font-size:12.5px;font-weight:700;padding:8px 15px;border-radius:10px;cursor:pointer;transition:.2s}
-.refresh:hover{background:rgba(255,255,255,.24)}
+.refresh{flex:none;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.32);color:#fff;
+  font-family:inherit;font-size:12.5px;font-weight:700;padding:9px 16px;border-radius:10px;cursor:pointer;transition:.2s}
+.refresh:hover{background:rgba(255,255,255,.26)}
+@media(max-width:620px){header{padding-bottom:58px}.refresh{width:100%}}
 
-/* kpi */
-.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:-26px 0 22px}
-@media(max-width:760px){.kpis{grid-template-columns:repeat(2,1fr)}}
-.kpi{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:16px 16px 14px;
-  box-shadow:0 8px 22px -16px rgba(11,26,58,.5)}
-.kpi .k{font-size:11.5px;font-weight:700;color:var(--muted);letter-spacing:.04em}
-.kpi .v{font-size:30px;font-weight:800;line-height:1.15;margin-top:2px}
-.kpi .s{font-size:11.5px;color:var(--muted)}
+/* ---------- kpi ---------- */
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:-42px 0 20px}
+@media(max-width:820px){.kpis{grid-template-columns:repeat(2,1fr)}}
+.kpi{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:15px 16px 13px;
+  box-shadow:0 10px 26px -18px rgba(11,26,58,.55)}
+.kpi .k{font-size:11.5px;font-weight:700;color:var(--muted)}
+.kpi .v{font-size:clamp(24px,4.6vw,30px);font-weight:800;line-height:1.2;margin-top:1px}
+.kpi .s{font-size:11.5px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 
-/* tabs */
+/* ---------- tabs ---------- */
 .tabs{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;margin-bottom:16px;scrollbar-width:none}
 .tabs::-webkit-scrollbar{display:none}
 .tab{flex:none;border:1px solid var(--line);background:#fff;color:var(--muted);cursor:pointer;
   font-family:inherit;font-size:13.5px;font-weight:700;padding:10px 16px;border-radius:12px;
   display:flex;align-items:center;gap:8px;transition:.2s;white-space:nowrap}
-.tab i{font-style:normal;width:8px;height:8px;border-radius:50%;background:currentColor;opacity:.55}
+.tab i{font-style:normal;width:8px;height:8px;border-radius:50%;background:currentColor;opacity:.5}
 .tab[data-m="M1"]{--c:var(--m1)} .tab[data-m="M2"]{--c:var(--m2)} .tab[data-m="M3"]{--c:var(--m3)}
-.tab.on{background:var(--c,var(--ink));border-color:transparent;color:#fff;
-  box-shadow:0 10px 20px -12px rgba(11,26,58,.8)}
+.tab.on{background:var(--c,var(--ink));border-color:transparent;color:#fff;box-shadow:0 10px 20px -13px rgba(11,26,58,.9)}
 .tab.on i{opacity:1;background:#fff}
 .tab small{font-weight:600;opacity:.75;font-size:11.5px}
 
-/* card */
+/* ---------- card ---------- */
 .card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:20px;margin-bottom:16px}
 .card h2{margin:0 0 3px;font-size:16px;font-weight:800;letter-spacing:-.01em}
 .card .sub{margin:0 0 16px;font-size:12.5px;color:var(--muted)}
-.grid{display:grid;grid-template-columns:1.15fr .85fr;gap:16px;align-items:start}
-@media(max-width:900px){.grid{grid-template-columns:1fr}}
+.grid{display:grid;grid-template-columns:1.1fr .9fr;gap:16px;align-items:start}
+@media(max-width:920px){.grid{grid-template-columns:1fr}}
 
-/* 逐題長條 */
-.q{padding:11px 0;border-bottom:1px solid #EEF3FA}
-.q:last-child{border-bottom:0}
+/* ---------- 逐題 ---------- */
+.q{padding:11px 0;border-bottom:1px solid var(--hair)}
+.q:last-child{border-bottom:0;padding-bottom:0}
 .qtop{display:flex;gap:10px;align-items:baseline;margin-bottom:6px}
 .qno{flex:none;width:21px;height:21px;border-radius:6px;display:grid;place-items:center;
   font-size:11px;font-weight:800;background:color-mix(in srgb,var(--accent) 12%,#fff);color:var(--accent)}
@@ -75,68 +73,75 @@ header p{margin:0;font-size:13px;color:#B9CDE9}
 .qavg{flex:none;font-size:15px;font-weight:800;color:var(--accent)}
 .bar{height:9px;border-radius:99px;background:#EDF2F9;overflow:hidden;display:flex}
 .bar span{height:100%;transition:width .6s cubic-bezier(.3,1,.4,1)}
-.s4{background:var(--accent)} .s3{background:color-mix(in srgb,var(--accent) 58%,#fff)}
-.s2{background:color-mix(in srgb,var(--accent) 30%,#fff)} .s1{background:#E4572E}
+.s4{background:var(--accent)} .s3{background:color-mix(in srgb,var(--accent) 55%,#fff)}
+.s2{background:color-mix(in srgb,var(--accent) 26%,#fff)} .s1{background:var(--warn)}
 .qmeta{display:flex;gap:12px;font-size:11px;color:var(--muted);margin-top:5px;flex-wrap:wrap}
 .legend{display:flex;gap:14px;flex-wrap:wrap;font-size:11.5px;color:var(--muted);margin-bottom:12px}
 .legend b{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+.pill{background:color-mix(in srgb,var(--warn) 12%,#fff);color:var(--warn);
+  font-size:10.5px;font-weight:800;padding:2px 8px;border-radius:99px;white-space:nowrap}
 
-/* 分數分布 */
+/* ---------- 分布 ---------- */
 .dist{display:flex;flex-direction:column;gap:9px}
 .drow{display:flex;align-items:center;gap:10px;font-size:12.5px}
-.drow .dl{width:70px;flex:none;color:var(--muted);font-weight:600}
-.drow .dt{flex:1;height:22px;background:#EDF2F9;border-radius:7px;overflow:hidden}
-.drow .dt i{display:block;height:100%;border-radius:7px}
-.drow .dv{width:52px;text-align:right;font-weight:800;flex:none}
+.drow .dl{width:66px;flex:none;color:var(--muted);font-weight:600}
+.drow .dt{flex:1;height:20px;background:#EDF2F9;border-radius:7px;overflow:hidden}
+.drow .dt i{display:block;height:100%;border-radius:7px;transition:width .6s}
+.drow .dv{width:44px;text-align:right;font-weight:800;flex:none}
 
-/* 回饋 */
+/* ---------- 圖表 ---------- */
+.chart{width:100%;height:auto;display:block;overflow:visible}
+.gridline{stroke:var(--hair);stroke-width:1}
+.axis{stroke:var(--line);stroke-width:1}
+.axtx{font-size:11px;fill:var(--muted);font-family:Manrope,"Noto Sans TC",sans-serif}
+.ptlab{font-size:11px;font-weight:800;font-family:Manrope,sans-serif}
+.chip-l{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:12px;font-size:12px;color:var(--muted)}
+.chip-l span{display:flex;align-items:center;gap:6px}
+.chip-l i{width:16px;height:3px;border-radius:2px;display:inline-block}
+.chip-l i.dash{background:repeating-linear-gradient(90deg,currentColor 0 4px,transparent 4px 8px)}
+
+/* ---------- 核心能力 ---------- */
+.corelist{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:14px}
+@media(max-width:700px){.corelist{grid-template-columns:1fr}}
+.crow{display:flex;align-items:center;gap:11px;border:1px solid var(--line);border-radius:12px;padding:10px 13px}
+.cdot{width:9px;height:9px;border-radius:50%;flex:none}
+.cname{flex:1;font-size:13px;font-weight:700;line-height:1.35}
+.cname em{display:block;font-style:normal;font-size:11px;font-weight:600;color:var(--muted)}
+.cdelta{font-size:13px;font-weight:800;flex:none}
+.up{color:var(--up)} .down{color:var(--down)} .flat{color:var(--flat)}
+
+/* ---------- 回饋 ---------- */
 .fbtools{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
 .fbtools select,.fbtools input{font-family:inherit;font-size:13px;border:1px solid var(--line);
   background:#fff;border-radius:10px;padding:9px 12px;color:var(--ink);outline:none}
 .fbtools input{flex:1;min-width:150px}
-.fbtools select:focus,.fbtools input:focus{border-color:var(--accent);box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 15%,transparent)}
+.fbtools select:focus,.fbtools input:focus{border-color:var(--accent);
+  box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 15%,transparent)}
 .fb{border-left:3px solid var(--accent);background:color-mix(in srgb,var(--accent) 4%,#fff);
   border-radius:0 12px 12px 0;padding:12px 14px;margin-bottom:10px}
 .fbh{display:flex;gap:8px;align-items:center;font-size:11.5px;color:var(--muted);margin-bottom:5px;flex-wrap:wrap}
 .fbh b{color:var(--ink);font-size:13px;font-weight:800}
-.pill{background:color-mix(in srgb,var(--accent) 12%,#fff);color:var(--accent);
-  font-size:10.5px;font-weight:800;padding:2px 8px;border-radius:99px}
 .fbq{font-size:11.5px;font-weight:700;color:var(--accent);margin-bottom:2px}
 .fbv{font-size:13.5px;white-space:pre-wrap;word-break:break-word}
 .fbv+.fbq{margin-top:9px}
+.tag{font-size:11px;font-weight:700;padding:2px 8px;border-radius:99px;background:#EEF3FA;color:var(--muted)}
+.mini{background:color-mix(in srgb,var(--accent) 11%,#fff);color:var(--accent);
+  font-size:10.5px;font-weight:800;padding:2px 8px;border-radius:99px}
 
-/* 表格 */
+/* ---------- 表格 ---------- */
 .tblwrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
-table{width:100%;border-collapse:collapse;font-size:13px;min-width:520px}
+table{width:100%;border-collapse:collapse;font-size:13px}
 th{text-align:left;font-size:11.5px;color:var(--muted);font-weight:700;padding:9px 10px;
   border-bottom:1.5px solid var(--line);white-space:nowrap}
-td{padding:10px;border-bottom:1px solid #EFF4FA;white-space:nowrap}
+td{padding:10px;border-bottom:1px solid var(--hair);white-space:nowrap}
 tr:last-child td{border-bottom:0}
 td.name{font-weight:700}
-.tag{font-size:11px;font-weight:700;padding:2px 8px;border-radius:99px;background:#EEF3FA;color:var(--muted)}
 .delta{font-weight:800}
-.delta.up{color:var(--up)} .delta.down{color:var(--down)} .delta.flat{color:var(--flat)}
-
-/* 核心能力 */
-.core{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
-@media(max-width:760px){.core{grid-template-columns:1fr}}
-.corecard{border:1px solid var(--line);border-radius:14px;padding:14px}
-.corecard h3{margin:0 0 2px;font-size:13.5px;font-weight:800}
-.corecard .cs{font-size:11.5px;color:var(--muted);margin-bottom:12px}
-.pts{display:flex;align-items:flex-end;gap:6px;height:92px;padding-bottom:2px}
-.pt{flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;justify-content:flex-end;height:100%}
-.pt .col{width:100%;max-width:52px;border-radius:7px 7px 3px 3px;min-height:4px;transition:height .6s cubic-bezier(.3,1,.4,1)}
-.pt .pv{font-size:12.5px;font-weight:800}
-.pt .pm{font-size:10.5px;color:var(--muted);font-weight:700}
-.pt.na .col{background:repeating-linear-gradient(45deg,#EEF3FA,#EEF3FA 4px,#E2EAF5 4px,#E2EAF5 8px);height:14px!important}
-.pt.na .pv{color:#AFBDD1;font-size:10.5px;font-weight:600}
-.cm1{background:linear-gradient(180deg,var(--m1b),var(--m1))}
-.cm2{background:linear-gradient(180deg,var(--m2b),var(--m2))}
-.cm3{background:linear-gradient(180deg,var(--m3b),var(--m3))}
 
 .note{font-size:12px;color:var(--muted);background:#F0F5FC;border:1px dashed var(--line);
   border-radius:12px;padding:11px 13px;margin-top:14px;line-height:1.65}
-.empty{text-align:center;color:var(--muted);font-size:13.5px;padding:34px 12px}
+.note b{color:var(--ink)}
+.empty{text-align:center;color:var(--muted);font-size:13.5px;padding:30px 12px}
 .state{max-width:520px;margin:70px auto;text-align:center;padding:0 20px}
 .spin{width:34px;height:34px;border:3px solid var(--line);border-top-color:var(--accent);
   border-radius:50%;margin:0 auto 16px;animation:sp .8s linear infinite}
@@ -145,8 +150,8 @@ td.name{font-weight:700}
 .state p{margin:0 0 16px;font-size:13.5px;color:var(--muted);word-break:break-all}
 .btn{background:var(--ink);color:#fff;border:0;font-family:inherit;font-size:13.5px;font-weight:700;
   padding:11px 22px;border-radius:11px;cursor:pointer}
-footer{text-align:center;font-size:11.5px;color:#94A6C0;padding:8px 0 34px}
-@media print{header{background:var(--ink)!important;-webkit-print-color-adjust:exact}.refresh,.fbtools{display:none}}
+footer{text-align:center;font-size:11.5px;color:#94A6C0;padding:6px 0 34px}
+@media print{header{-webkit-print-color-adjust:exact;print-color-adjust:exact}.refresh,.fbtools{display:none}}
 </style>
 </head>
 <body>
@@ -186,7 +191,7 @@ footer{text-align:center;font-size:11.5px;color:#94A6C0;padding:8px 0 34px}
     <div class="grid">
       <div class="card">
         <h2 id="qTitle">逐題自評結果</h2>
-        <p class="sub" id="qSub">每題平均分與作答分布，數值越低代表學員自覺越不足</p>
+        <p class="sub" id="qSub">每題平均分與作答分布</p>
         <div class="legend">
           <span><b class="s4"></b>4 完全做到</span>
           <span><b class="s3"></b>3 大部分做到</span>
@@ -198,16 +203,22 @@ footer{text-align:center;font-size:11.5px;color:#94A6C0;padding:8px 0 34px}
 
       <div>
         <div class="card">
+          <h2>能力側寫</h2>
+          <p class="sub" id="radarSub">越靠外圈代表該題自評越高</p>
+          <div id="radar"></div>
+        </div>
+        <div class="card">
           <h2>整體分數分布</h2>
           <p class="sub" id="distSub">本月所有作答的選項次數</p>
           <div class="dist" id="dist"></div>
         </div>
-        <div class="card">
-          <h2>學員個人成績</h2>
-          <p class="sub" id="rosterSub">依平均分排序</p>
-          <div class="tblwrap"><table id="roster"></table></div>
-        </div>
       </div>
+    </div>
+
+    <div class="card">
+      <h2>學員個人成績</h2>
+      <p class="sub" id="rosterSub">依平均分排序</p>
+      <div class="tblwrap"><table id="roster"></table></div>
     </div>
 
     <div class="card">
@@ -222,16 +233,18 @@ footer{text-align:center;font-size:11.5px;color:#94A6C0;padding:8px 0 34px}
 
     <div class="card">
       <h2>跨月份核心能力追蹤</h2>
-      <p class="sub">三個月題目不同，只有以下構面在多個月都有對應題目，才適合逐月比較</p>
-      <div class="core" id="core"></div>
+      <p class="sub">同一能力構面在各月對應題目的平均分；虛線表示該月沒有對應題目、無法連續比較</p>
+      <div id="coreChart"></div>
+      <div class="corelist" id="coreList"></div>
       <div class="note" id="coreNote"></div>
     </div>
 
     <div class="card">
-      <h2>個人跨月成長</h2>
-      <p class="sub">以姓名比對；同名同姓或姓名填寫不一致時需人工確認</p>
-      <div class="tblwrap"><table id="growth"></table></div>
-      <div class="note">各月題目與題數不同，總分不可直接比較，此處一律以「平均分（1–4）」呈現。平均分下降不必然代表退步 —— 也可能是學員對自身標準變嚴格，或該月情境本身較困難，建議搭配回饋原文一起判讀。</div>
+      <h2>個人跨月成長軌跡</h2>
+      <p class="sub">每條細線是一位學員，深色粗線為全體平均</p>
+      <div id="growthChart"></div>
+      <div class="tblwrap" style="margin-top:16px"><table id="growth"></table></div>
+      <div class="note">各月題目與題數不同，總分不可直接比較，此處一律以平均分（1–4）呈現。分數下降不必然代表退步 —— 也可能是學員對自身標準變嚴格，或該月情境本身較困難，建議搭配回饋原文一起判讀。</div>
     </div>
 
     <footer id="foot"></footer>
@@ -241,7 +254,8 @@ footer{text-align:center;font-size:11.5px;color:#94A6C0;padding:8px 0 34px}
 <script>
 /* ================= 設定 ================= */
 const GAS_URL = "https://script.google.com/macros/s/AKfycbx2RQVGSnuiZszTkLJ8hc9ZTE8Nlpe0mG7xyo2KlIXzoTFJk2SNzEjL4p6Q63IwVbWbBQ/exec";
-const MONTH_COLOR = { M1: "--m1", M2: "--m2", M3: "--m3" };
+const MONTH_COLOR = { M1: "#1565D8", M2: "#0E7A5B", M3: "#6B2FB5" };
+const SERIES = ["#1565D8", "#0E7A5B", "#6B2FB5", "#E4572E", "#0891B2", "#B45309"];
 
 const $ = id => document.getElementById(id);
 const esc = s => String(s == null ? "" : s)
@@ -257,13 +271,12 @@ async function load() {
   try {
     let d;
     try {
-      const res = await fetch(GAS_URL + "?action=dashboard", { method: "GET" });
+      const res = await fetch(GAS_URL + "?action=dashboard");
       d = await res.json();
     } catch (e) {
-      d = await jsonp(GAS_URL + "?action=dashboard");   // 跨網域被擋時的備援
+      d = await jsonp(GAS_URL + "?action=dashboard");
     }
     if (!d || !d.ok) throw new Error(d && d.error ? d.error : "後端回傳格式不正確");
-
     DATA = d;
     if (!d.months || !d.months.length) {
       $("loading").style.display = "none";
@@ -290,6 +303,96 @@ function jsonp(url) {
     s.src = url + "&callback=" + cb;
     document.body.appendChild(s);
   });
+}
+
+/* ================= 圖表（純 SVG，不依賴外部套件） ================= */
+
+/** 折線圖本體，回傳 <g> 內容字串 */
+function linePaths(series, xLabels, X, Y, opt) {
+  let g = "";
+  series.forEach(s => {
+    const pts = s.points.map((v, i) => v == null ? null : { x: X(i), y: Y(v), v: v });
+    const real = pts.map((p, i) => p ? i : -1).filter(i => i >= 0);
+
+    for (let k = 0; k < real.length - 1; k++) {
+      const a = pts[real[k]], b = pts[real[k + 1]];
+      const gap = real[k + 1] - real[k] > 1;
+      g += `<line x1="${a.x}" y1="${a.y}" x2="${b.x}" y2="${b.y}" stroke="${s.color}"
+             stroke-width="${opt.thin ? 1.6 : 2.6}" stroke-linecap="round"
+             opacity="${gap ? .4 : (opt.thin ? .34 : 1)}"${gap ? ' stroke-dasharray="5 5"' : ''}/>`;
+    }
+    pts.forEach(p => {
+      if (!p) return;
+      g += `<circle cx="${p.x}" cy="${p.y}" r="${opt.thin ? 2.6 : 4.6}" fill="#fff"
+             stroke="${s.color}" stroke-width="${opt.thin ? 1.5 : 2.4}" opacity="${opt.thin ? .5 : 1}"/>`;
+      if (!opt.thin && opt.showValues !== false)
+        g += `<text class="ptlab" x="${p.x}" y="${p.y - 11}" text-anchor="middle" fill="${s.color}">${p.v.toFixed(2)}</text>`;
+    });
+    // 單點無法連線時標註
+    if (real.length === 1 && !opt.thin) {
+      const p = pts[real[0]];
+      g += `<text class="axtx" x="${p.x}" y="${p.y + 18}" text-anchor="middle">僅單月資料</text>`;
+    }
+  });
+  return g;
+}
+
+/** 折線圖外框（座標軸＋格線），可疊加多組 series */
+function lineChart(groups, xLabels, opt) {
+  opt = opt || {};
+  const W = 720, H = opt.height || 300;
+  const P = { t: 20, r: 22, b: 44, l: 38 };
+  const iw = W - P.l - P.r, ih = H - P.t - P.b;
+  const X = i => P.l + (xLabels.length === 1 ? iw / 2 : i * iw / (xLabels.length - 1));
+  const Y = v => P.t + ih - (v - 1) / 3 * ih;
+
+  let g = "";
+  for (let v = 1; v <= 4; v += 0.5) {
+    const full = Number.isInteger(v);
+    g += `<line class="gridline" x1="${P.l}" y1="${Y(v)}" x2="${W - P.r}" y2="${Y(v)}"${full ? '' : ' stroke-dasharray="2 4"'}/>`;
+    if (full) g += `<text class="axtx" x="${P.l - 8}" y="${Y(v) + 4}" text-anchor="end">${v}</text>`;
+  }
+  g += `<line class="axis" x1="${P.l}" y1="${P.t + ih}" x2="${W - P.r}" y2="${P.t + ih}"/>`;
+  xLabels.forEach((L, i) => {
+    g += `<text class="axtx" x="${X(i)}" y="${P.t + ih + 21}" text-anchor="middle" font-weight="800" fill="#0B1A3A">${esc(L)}</text>`;
+    if (opt.subLabels && opt.subLabels[i])
+      g += `<text class="axtx" x="${X(i)}" y="${P.t + ih + 36}" text-anchor="middle" font-size="10.5">${esc(opt.subLabels[i])}</text>`;
+  });
+
+  groups.forEach(grp => { g += linePaths(grp.series, xLabels, X, Y, grp.opt || {}); });
+
+  return `<svg class="chart" viewBox="0 0 ${W} ${H}" role="img" aria-label="折線圖">${g}</svg>`;
+}
+
+/** 雷達圖 */
+function radarChart(vals, color) {
+  const S = 320, C = S / 2, R = 104;
+  const n = vals.length;
+  if (!n) return "";
+  const ang = i => (Math.PI * 2 * i / n) - Math.PI / 2;
+  const pt = (i, v) => [C + Math.cos(ang(i)) * (v / 4) * R, C + Math.sin(ang(i)) * (v / 4) * R];
+
+  let g = "";
+  [1, 2, 3, 4].forEach(r => {
+    const poly = Array.from({ length: n }, (_, i) => pt(i, r).join(",")).join(" ");
+    g += `<polygon points="${poly}" fill="${r === 4 ? '#FBFDFF' : 'none'}"
+           stroke="${r === 4 ? '#D6E2F2' : '#EEF3FA'}" stroke-width="1"/>`;
+  });
+  for (let i = 0; i < n; i++) {
+    const [x, y] = pt(i, 4);
+    g += `<line x1="${C}" y1="${C}" x2="${x}" y2="${y}" stroke="#EEF3FA" stroke-width="1"/>`;
+    const [lx, ly] = pt(i, 4.62);
+    g += `<circle cx="${lx}" cy="${ly}" r="11" fill="#F4F7FC"/>
+          <text class="axtx" x="${lx}" y="${ly + 4}" text-anchor="middle" font-weight="800" fill="${color}">${vals[i].no}</text>`;
+  }
+  const poly = vals.map((v, i) => pt(i, Math.max(v.avg, 0.06)).join(",")).join(" ");
+  g += `<polygon points="${poly}" fill="${color}" fill-opacity=".16" stroke="${color}" stroke-width="2.2" stroke-linejoin="round"/>`;
+  vals.forEach((v, i) => {
+    const [x, y] = pt(i, Math.max(v.avg, 0.06));
+    g += `<circle cx="${x}" cy="${y}" r="3.6" fill="#fff" stroke="${color}" stroke-width="2"/>`;
+  });
+  return `<svg class="chart" viewBox="0 0 ${S} ${S}" style="max-width:330px;margin:0 auto"
+           role="img" aria-label="能力側寫雷達圖">${g}</svg>`;
 }
 
 /* ================= 繪製 ================= */
@@ -319,30 +422,27 @@ function render() {
   renderCore();
   renderGrowth();
   $("foot").textContent = "資料更新時間：" + new Date(DATA.generated).toLocaleString("zh-TW");
-
   showMonth(0);
 }
 
 function showMonth(i) {
   const m = DATA.months[i];
   CUR = m;
-
-  document.documentElement.style.setProperty("--accent", `var(${MONTH_COLOR[m.month] || "--m1"})`);
-  document.documentElement.style.setProperty("--accentB", `var(${MONTH_COLOR[m.month] || "--m1"})`);
+  const color = MONTH_COLOR[m.month] || "#1565D8";
+  document.documentElement.style.setProperty("--accent", color);
 
   $("hsub").textContent = `${m.month}　${m.theme}　·　${m.qCount} 題自評（滿分 ${m.maxScore} 分）`;
   $("kMonth").textContent  = m.n;
   $("kMonthS").textContent = m.theme;
   $("kAvg").textContent    = m.avgAll.toFixed(2);
 
-  // 逐題
+  const weakest = m.questions.slice().sort((a, b) => a.avg - b.avg)[0];
   $("qTitle").textContent = `逐題自評結果 — ${m.theme}`;
-  $("qSub").textContent   = `共 ${m.n} 位學員作答，每題平均分與作答分布`;
-  const sorted = m.questions.slice().sort((a, b) => a.avg - b.avg);
+  $("qSub").textContent   = `共 ${m.n} 位學員作答`;
   $("qList").innerHTML = m.questions.map(q => {
     const t = q.n || 1;
     const w = v => (q.dist[v] / t * 100).toFixed(2) + "%";
-    const weak = sorted[0] && q.no === sorted[0].no && q.avg < 3.5;
+    const weak = weakest && q.no === weakest.no && q.avg < 3.5;
     return `
       <div class="q">
         <div class="qtop">
@@ -357,13 +457,15 @@ function showMonth(i) {
           <span class="s1" style="width:${w(1)}"></span>
         </div>
         <div class="qmeta">
-          <span>完全做到 ${q.dist[4]} 人</span><span>大部分 ${q.dist[3]} 人</span>
-          <span>部分 ${q.dist[2]} 人</span><span>沒做到 ${q.dist[1]} 人</span>
+          <span>完全做到 ${q.dist[4]}</span><span>大部分 ${q.dist[3]}</span>
+          <span>部分 ${q.dist[2]}</span><span>沒做到 ${q.dist[1]}</span>
         </div>
       </div>`;
   }).join("");
 
-  // 分布
+  $("radar").innerHTML = radarChart(m.questions, color);
+  $("radarSub").textContent = `外圈為 4 分，數字對應左側題號；凹陷處即本月教學缺口`;
+
   const tot = { 4: 0, 3: 0, 2: 0, 1: 0 };
   m.questions.forEach(q => [4, 3, 2, 1].forEach(v => tot[v] += q.dist[v]));
   const all = tot[4] + tot[3] + tot[2] + tot[1] || 1;
@@ -376,7 +478,6 @@ function showMonth(i) {
       <span class="dv num">${(tot[v] / all * 100).toFixed(0)}%</span>
     </div>`).join("");
 
-  // 名單
   const rs = m.records.slice().sort((a, b) => b.avg - a.avg);
   $("rosterSub").textContent = `${m.n} 位學員，依平均分排序`;
   $("roster").innerHTML = `
@@ -389,7 +490,6 @@ function showMonth(i) {
       <td class="num" style="font-weight:800">${r.avg.toFixed(2)}</td></tr>`).join("")}
     </tbody>`;
 
-  // 回饋
   $("fbTitle").textContent = `學員回饋原文 — ${m.theme}`;
   $("fbField").innerHTML = '<option value="">全部題目</option>' +
     m.openLabels.map(L => `<option value="${esc(L)}">${esc(L)}</option>`).join("");
@@ -419,51 +519,83 @@ function renderFeedback() {
       <div class="fbh"><b>${esc(r.name)}</b>
         <span class="tag">${esc(r.role)}</span>
         <span>${esc(r.date)}</span>
-        <span class="pill">平均 ${r.avg.toFixed(2)}</span></div>
+        <span class="mini">平均 ${r.avg.toFixed(2)}</span></div>
       ${opens.map(o => `<div class="fbq">${esc(o.label)}</div><div class="fbv">${esc(o.value)}</div>`).join("")}
     </div>`).join("");
 }
-document.addEventListener("input", e => {
-  if (e.target.id === "fbSearch") renderFeedback();
-});
-document.addEventListener("change", e => {
-  if (e.target.id === "fbField") renderFeedback();
-});
+document.addEventListener("input",  e => { if (e.target.id === "fbSearch") renderFeedback(); });
+document.addEventListener("change", e => { if (e.target.id === "fbField")  renderFeedback(); });
 
-/* 核心能力 */
+/* ---------- 核心能力 ---------- */
 function renderCore() {
-  const allMonths = DATA.months.map(m => m.month);
-  $("core").innerHTML = DATA.core.map(c => {
-    const byM = {};
-    c.points.forEach(p => byM[p.month] = p);
+  const ms = DATA.months.map(m => m.month);
+  const themes = DATA.months.map(m => m.theme);
+
+  const series = DATA.core.map((c, k) => {
+    const byM = {}; c.points.forEach(p => byM[p.month] = p);
+    return {
+      name: c.name, color: SERIES[k % SERIES.length],
+      points: ms.map(mo => byM[mo] ? byM[mo].avg : null),
+      covered: c.covered
+    };
+  });
+
+  $("coreChart").innerHTML =
+    lineChart([{ series: series, opt: { showValues: false } }], ms, { height: 300, subLabels: themes }) +
+    `<div class="chip-l">${series.map(s =>
+      `<span style="color:${s.color}"><i style="background:${s.color}"></i>
+       <b style="color:var(--ink);font-weight:700">${esc(s.name)}</b></span>`).join("")}
+     <span style="color:var(--muted)"><i class="dash" style="color:var(--muted)"></i>虛線：中間月份無對應題目</span></div>`;
+
+  $("coreList").innerHTML = series.map(s => {
+    const real = s.points.filter(v => v != null);
+    const d = real.length > 1 ? Math.round((real[real.length - 1] - real[0]) * 100) / 100 : null;
+    const cls = d == null ? "flat" : d > 0 ? "up" : d < 0 ? "down" : "flat";
+    const txt = d == null ? "資料不足" : (d > 0 ? "▲ +" : d < 0 ? "▼ " : "＝ ") + d.toFixed(2);
+    const miss = ms.filter((mo, i) => s.points[i] == null);
     return `
-      <div class="corecard">
-        <h3>${esc(c.name)}</h3>
-        <div class="cs">${c.covered} / ${allMonths.length} 個月份有對應題目</div>
-        <div class="pts">
-          ${allMonths.map(mo => {
-            const p = byM[mo];
-            if (!p) return `<div class="pt na"><span class="pv">無題目</span><div class="col"></div><span class="pm">${esc(mo)}</span></div>`;
-            const h = Math.max(8, (p.avg / 4) * 76);
-            return `<div class="pt"><span class="pv num">${p.avg.toFixed(2)}</span>
-              <div class="col c${mo.toLowerCase()}" style="height:${h}px"></div>
-              <span class="pm">${esc(mo)}・第${p.qNo}題</span></div>`;
-          }).join("")}
-        </div>
+      <div class="crow">
+        <span class="cdot" style="background:${s.color}"></span>
+        <span class="cname">${esc(s.name)}
+          <em>${s.covered}/${ms.length} 個月有題目${miss.length ? "・缺 " + miss.join("、") : ""}</em></span>
+        <span class="cdelta ${cls}">${txt}</span>
       </div>`;
   }).join("");
 
   const full = DATA.core.filter(c => c.covered === DATA.months.length).map(c => c.name);
+  const part = DATA.core.filter(c => c.covered < DATA.months.length).map(c => c.name);
   $("coreNote").innerHTML = full.length
-    ? `目前只有<b>${esc(full.join("、"))}</b>在每個月都有對應題目，是唯一能完整說明「三個月是否成長」的構面。其餘構面缺某些月份的題目，只能做局部比較；若希望三條線都完整，需在缺漏的月份自評表補上對應題目。`
+    ? `只有<b>${esc(full.join("、"))}</b>在每個月都有對應題目，是目前唯一能完整說明「三個月是否成長」的構面。`
+      + (part.length ? `<b>${esc(part.join("、"))}</b>缺少部分月份題目，折線以虛線帶過，只能做局部比較；要補齊需在缺漏月份的自評表加入對應題目。` : "")
     : "目前沒有任何構面在每個月都有對應題目，跨月成長比較的證據力有限。";
 }
 
-/* 個人成長 */
+/* ---------- 個人成長 ---------- */
 function renderGrowth() {
   const ms = DATA.months.map(m => m.month);
+  const themes = DATA.months.map(m => m.theme);
   const g = DATA.growth;
-  if (!g.length) { $("growth").innerHTML = ""; return; }
+  if (!g.length) { $("growthChart").innerHTML = ""; $("growth").innerHTML = ""; return; }
+
+  const lines = g.map(p => ({
+    name: p.name, color: "#5B7BA6",
+    points: ms.map(mo => p.months[mo] != null ? p.months[mo] : null)
+  }));
+
+  const mean = ms.map(mo => {
+    const v = g.map(p => p.months[mo]).filter(x => x != null);
+    return v.length ? Math.round(v.reduce((a, b) => a + b, 0) / v.length * 100) / 100 : null;
+  });
+
+  $("growthChart").innerHTML =
+    lineChart([
+      { series: lines, opt: { thin: true } },
+      { series: [{ name: "全體平均", color: "#0B1A3A", points: mean }], opt: {} }
+    ], ms, { height: 300, subLabels: themes }) +
+    `<div class="chip-l">
+       <span style="color:#5B7BA6"><i style="background:#5B7BA6"></i>個別學員</span>
+       <span style="color:#0B1A3A"><i style="background:#0B1A3A"></i><b style="font-weight:700">全體平均</b></span>
+     </div>`;
 
   $("growth").innerHTML = `
     <thead><tr><th>姓名</th><th>身份</th>
