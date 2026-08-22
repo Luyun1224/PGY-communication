@@ -200,8 +200,8 @@ input.err,select.err,textarea.err{border-color:var(--warn);box-shadow:0 0 0 4px 
       <p>課程結束後請憑今天的實際演練狀況作答，這份自評只用於了解訓練成效，不列入考核。</p>
       <div class="meta">
         <span class="chip">奇美醫院一般內科示範病房</span>
-        <span class="chip">6 題自評 + 2 題回饋</span>
-        <span class="chip">約 2 分鐘</span>
+        <span class="chip">8 題自評 + 2 題回饋</span>
+        <span class="chip">約 3 分鐘</span>
       </div>
     </div>
 
@@ -227,7 +227,7 @@ input.err,select.err,textarea.err{border-color:var(--warn);box-shadow:0 0 0 4px 
     </div>
 
     <div class="card">
-      <div class="sec-h"><div class="sec-n">2</div><div><h2>會談表現自評</h2><span>每題單選，共 6 題</span></div></div>
+      <div class="sec-h"><div class="sec-n">2</div><div><h2>會談表現自評</h2><span>每題單選，共 8 題</span></div></div>
       <div class="legend" id="legend"></div>
       <div id="questions"></div>
     </div>
@@ -291,7 +291,9 @@ const CONFIG = {
     "能確認家屬身份，並表現出適度的同理心",
     "能引導家屬白天尋求主治醫師／醫療團隊",
     "能尊重病人隱私並遵守「病人不在場」時病情告知的倫理與法律規範，不隨意透露敏感資訊",
-    "必要時能尋求後援及交班"
+    "必要時能尋求後援及交班",
+    "我能用簡單、非醫學術語的方式向家屬說明病情",
+    "面對家屬的情緒或質疑時，我能保持冷靜和專業"
   ]
 };
 const MAX = CONFIG.questions.length * CONFIG.scale[0].v;
