@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#062A22">
+<title>醫病溝通會談互動工作坊｜值班時間病情解釋自評表</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --deep:#062A22; --navy:#0E4736; --blue:#0E7A5B; --azure:#19A87D;
+  --cyan:#57D9AE; --ice:#E6F6EF; --paper:#F6FBF8;
+  --glass:rgba(255,255,255,.72); --glass-line:rgba(255,255,255,.85);
+  --muted:#4F7A6B; --ok:#0B6B4F; --warn:#E4572E;
+  --r:20px; --shadow:0 18px 44px -18px rgba(6,42,34,.38);
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0}
+body{
+  font-family:"Noto Sans TC","Microsoft JhengHei",system-ui,-apple-system,sans-serif;
+  color:var(--deep); background:var(--paper);
+  min-height:100vh; overflow-x:hidden; line-height:1.65;
+  padding-bottom:calc(96px + env(safe-area-inset-bottom));
+}
+
+/* ---------- 液態背景 ---------- */
+.bg{position:fixed;inset:0;z-index:-2;background:
+  radial-gradient(120% 90% at 10% 0%,#DCF2E8 0%,transparent 60%),
+  radial-gradient(110% 80% at 100% 10%,#E2F7EE 0%,transparent 55%),
+  linear-gradient(175deg,#F6FBF8 0%,#E6F6EF 55%,#DFF1E8 100%);}
+.blob{position:fixed;z-index:-1;border-radius:50%;filter:blur(60px);opacity:.5;pointer-events:none}
+.b1{width:52vw;height:52vw;max-width:460px;max-height:460px;top:-14vh;left:-16vw;
+    background:radial-gradient(circle at 35% 35%,#8FD9BE,#19A87D00 70%);animation:drift 22s ease-in-out infinite}
+.b2{width:46vw;height:46vw;max-width:400px;max-height:400px;top:38vh;right:-18vw;
+    background:radial-gradient(circle at 60% 40%,#7FE8CF,#57D9AE00 70%);animation:drift 28s ease-in-out infinite reverse}
+.b3{width:44vw;height:44vw;max-width:380px;max-height:380px;bottom:-12vh;left:12vw;
+    background:radial-gradient(circle at 50% 50%,#B4E3D0,#0E7A5B00 72%);animation:drift 34s ease-in-out infinite}
+@keyframes drift{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(6vw,-4vh) scale(1.08)}66%{transform:translate(-5vw,5vh) scale(.94)}}
+
+.wrap{max-width:760px;margin:0 auto;padding:20px 16px 0}
+
+/* ---------- 進度（液面） ---------- */
+.progress{position:sticky;top:0;z-index:30;margin:0 -16px 18px;padding:10px 16px calc(10px + env(safe-area-inset-top));
+  padding-top:calc(10px + env(safe-area-inset-top));
+  background:rgba(246,251,248,.72);backdrop-filter:blur(16px) saturate(160%);-webkit-backdrop-filter:blur(16px) saturate(160%);
+  border-bottom:1px solid rgba(14,122,91,.10)}
+.prow{display:flex;align-items:center;gap:12px}
+.ptxt{font-size:12.5px;font-weight:700;color:var(--navy);white-space:nowrap;letter-spacing:.02em}
+.ptrack{flex:1;height:12px;border-radius:99px;background:rgba(14,122,91,.12);overflow:hidden;position:relative}
+.pfill{position:absolute;inset:0 auto 0 0;width:0%;border-radius:99px;
+  background:linear-gradient(90deg,#0E7A5B,#19A87D 55%,#57D9AE);transition:width .5s cubic-bezier(.4,1.3,.5,1);overflow:hidden}
+.pfill::after{content:"";position:absolute;top:-8px;left:0;width:200%;height:200%;
+  background:radial-gradient(60% 42% at 25% 0,rgba(255,255,255,.55),transparent 60%),
+             radial-gradient(60% 42% at 75% 0,rgba(255,255,255,.4),transparent 60%);
+  animation:wave 3.2s linear infinite}
+@keyframes wave{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+
+/* ---------- 卡片 ---------- */
+.card{background:var(--glass);backdrop-filter:blur(22px) saturate(170%);-webkit-backdrop-filter:blur(22px) saturate(170%);
+  border:1px solid var(--glass-line);border-radius:var(--r);box-shadow:var(--shadow);
+  padding:22px 20px;margin-bottom:16px;position:relative;overflow:hidden}
+.card::before{content:"";position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.95),transparent)}
+
+.hero{background:linear-gradient(150deg,#062A22 0%,#0E4736 48%,#0E7A5B 100%);color:#fff;border:0;padding:26px 22px}
+.hero::after{content:"";position:absolute;right:-70px;bottom:-90px;width:250px;height:250px;border-radius:50%;
+  background:radial-gradient(circle at 40% 40%,rgba(87,217,174,.5),transparent 68%)}
+.eyebrow{display:inline-flex;align-items:center;gap:7px;font-size:11.5px;font-weight:700;letter-spacing:.16em;
+  background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.3);padding:5px 12px;border-radius:99px;margin-bottom:14px}
+.dot{width:6px;height:6px;border-radius:50%;background:#57D9AE;box-shadow:0 0 0 4px rgba(87,217,174,.24)}
+.hero h1{margin:0 0 6px;font-size:clamp(21px,5.4vw,28px);font-weight:900;letter-spacing:-.01em;line-height:1.35}
+.hero p{margin:0;font-size:13.5px;color:#A9DCC7;position:relative;z-index:1}
+.meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px;position:relative;z-index:1}
+.chip{font-size:12px;font-weight:600;background:rgba(255,255,255,.13);border:1px solid rgba(255,255,255,.22);
+  padding:5px 11px;border-radius:10px}
+
+.sec-h{display:flex;align-items:center;gap:10px;margin:0 0 16px}
+.sec-n{width:30px;height:30px;flex:none;border-radius:10px;display:grid;place-items:center;
+  background:linear-gradient(140deg,#0E7A5B,#57D9AE);color:#fff;font-size:13px;font-weight:900;
+  box-shadow:0 6px 14px -5px rgba(14,122,91,.65)}
+.sec-h h2{margin:0;font-size:16.5px;font-weight:800;letter-spacing:-.01em}
+.sec-h span{font-size:12px;color:var(--muted);font-weight:500}
+
+/* ---------- 表單 ---------- */
+label.fl{display:block;font-size:13px;font-weight:700;color:var(--navy);margin:0 0 7px}
+.req{color:var(--warn);margin-left:3px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:520px){.grid2{grid-template-columns:1fr}}
+input[type=text],input[type=date],select,textarea{
+  width:100%;font-family:inherit;font-size:15px;color:var(--deep);
+  background:rgba(255,255,255,.9);border:1.5px solid rgba(14,122,91,.16);border-radius:13px;
+  padding:12px 14px;outline:none;transition:.22s;appearance:none}
+select{background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='none' stroke='%234F7A6B' stroke-width='2'><path d='M4 6l4 4 4-4'/></svg>");
+  background-repeat:no-repeat;background-position:right 14px center}
+textarea{min-height:104px;resize:vertical;line-height:1.75}
+input:focus,select:focus,textarea:focus{border-color:var(--azure);background:#fff;box-shadow:0 0 0 4px rgba(25,168,125,.14)}
+input.err,select.err,textarea.err{border-color:var(--warn);box-shadow:0 0 0 4px rgba(228,87,46,.12)}
+.field{margin-bottom:14px}
+.field:last-child{margin-bottom:0}
+
+/* 身份膠囊 */
+.pills{display:flex;gap:8px;flex-wrap:wrap}
+.pill{flex:1;min-width:88px;position:relative}
+.pill input{position:absolute;opacity:0;width:0;height:0}
+.pill span{display:block;text-align:center;font-size:14px;font-weight:700;color:var(--muted);
+  background:rgba(255,255,255,.85);border:1.5px solid rgba(14,122,91,.16);border-radius:13px;padding:11px 8px;
+  cursor:pointer;transition:.22s}
+.pill input:checked+span{color:#fff;border-color:transparent;
+  background:linear-gradient(135deg,#0E7A5B,#19A87D);box-shadow:0 8px 18px -8px rgba(14,122,91,.8)}
+.pill input:focus-visible+span{box-shadow:0 0 0 4px rgba(25,168,125,.3)}
+
+/* ---------- 評分題 ---------- */
+.q{padding:16px 0;border-bottom:1px dashed rgba(14,122,91,.16)}
+.q:first-of-type{padding-top:4px}
+.q:last-of-type{border-bottom:0;padding-bottom:2px}
+.q.pending{background:linear-gradient(90deg,rgba(228,87,46,.07),transparent);
+  margin:0 -12px;padding-left:12px;padding-right:12px;border-radius:12px}
+.qt{display:flex;gap:10px;font-size:14.5px;font-weight:600;line-height:1.6;margin-bottom:12px}
+.qn{flex:none;width:24px;height:24px;border-radius:8px;display:grid;place-items:center;font-size:12px;font-weight:900;
+  background:rgba(14,122,91,.1);color:var(--blue);margin-top:2px;transition:.25s}
+.q.done .qn{background:linear-gradient(140deg,#0B6B4F,#19A87D);color:#fff}
+.opts{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}
+.opt{position:relative}
+.opt input{position:absolute;opacity:0;width:0;height:0}
+.opt span{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;min-height:56px;
+  padding:8px 3px;border-radius:13px;cursor:pointer;text-align:center;
+  background:rgba(255,255,255,.85);border:1.5px solid rgba(14,122,91,.15);transition:.2s}
+.opt b{font-size:15px;font-weight:900;color:var(--blue);line-height:1}
+.opt em{font-style:normal;font-size:11px;font-weight:700;color:var(--muted);letter-spacing:-.01em}
+.opt input:checked+span{border-color:transparent;transform:translateY(-2px);
+  background:linear-gradient(150deg,#0E7A5B,#19A87D 70%,#57D9AE);box-shadow:0 10px 20px -10px rgba(14,122,91,.85)}
+.opt input:checked+span b,.opt input:checked+span em{color:#fff}
+.opt input:focus-visible+span{box-shadow:0 0 0 4px rgba(25,168,125,.3)}
+@media(max-width:400px){.opt em{font-size:10px}.opt b{font-size:14px}.opt span{min-height:52px}}
+
+.legend{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:11.5px;color:var(--muted);
+  background:rgba(14,122,91,.05);border:1px dashed rgba(14,122,91,.18);border-radius:12px;padding:10px 12px;margin-bottom:6px}
+.legend i{font-style:normal;font-weight:900;color:var(--blue)}
+
+/* ---------- 送出列 ---------- */
+.bar{position:fixed;left:0;right:0;bottom:0;z-index:40;padding:12px 16px calc(12px + env(safe-area-inset-bottom));
+  background:rgba(255,255,255,.78);backdrop-filter:blur(20px) saturate(180%);-webkit-backdrop-filter:blur(20px) saturate(180%);
+  border-top:1px solid rgba(14,122,91,.14)}
+.bar-in{max-width:760px;margin:0 auto;display:flex;align-items:center;gap:12px}
+.hint{flex:1;font-size:12px;color:var(--muted);font-weight:600;line-height:1.4}
+.hint b{color:var(--warn)}
+.btn{flex:none;border:0;cursor:pointer;font-family:inherit;font-size:15.5px;font-weight:800;color:#fff;
+  padding:14px 30px;border-radius:15px;letter-spacing:.02em;
+  background:linear-gradient(135deg,#062A22,#0E7A5B 55%,#19A87D);
+  box-shadow:0 12px 26px -12px rgba(6,42,34,.85);transition:.22s}
+.btn:hover{transform:translateY(-2px)}
+.btn:active{transform:translateY(0) scale(.98)}
+.btn:disabled{opacity:.55;cursor:not-allowed;transform:none}
+.spin{display:inline-block;width:15px;height:15px;border:2.5px solid rgba(255,255,255,.35);border-top-color:#fff;
+  border-radius:50%;animation:sp .7s linear infinite;vertical-align:-2px;margin-right:7px}
+@keyframes sp{to{transform:rotate(360deg)}}
+
+/* ---------- 完成頁 ---------- */
+.done-view{display:none;text-align:center;padding:40px 22px}
+.done-view.on{display:block;animation:up .5s cubic-bezier(.2,1,.3,1)}
+@keyframes up{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+.tick{width:76px;height:76px;margin:0 auto 20px;border-radius:50%;display:grid;place-items:center;
+  background:linear-gradient(140deg,#0B6B4F,#19A87D);box-shadow:0 16px 34px -14px rgba(11,107,79,.8)}
+.tick svg{width:36px;height:36px;stroke:#fff;stroke-width:3.4;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.done-view h2{margin:0 0 8px;font-size:22px;font-weight:900}
+.done-view p{margin:0 0 22px;color:var(--muted);font-size:14px}
+.score{display:inline-flex;align-items:baseline;gap:6px;background:rgba(14,122,91,.07);
+  border:1px solid rgba(14,122,91,.18);border-radius:16px;padding:14px 26px}
+.score b{font-size:38px;font-weight:900;
+  background:linear-gradient(135deg,#062A22,#19A87D);-webkit-background-clip:text;background-clip:text;color:transparent;line-height:1}
+.score i{font-style:normal;font-size:13px;color:var(--muted);font-weight:700}
+
+.foot{text-align:center;font-size:11.5px;color:#7C9E90;padding:6px 0 24px}
+.toast{position:fixed;left:50%;bottom:96px;transform:translate(-50%,20px);z-index:60;opacity:0;pointer-events:none;
+  background:var(--deep);color:#fff;font-size:13.5px;font-weight:700;padding:12px 20px;border-radius:13px;
+  box-shadow:0 14px 32px -12px rgba(6,42,34,.9);transition:.3s;max-width:calc(100% - 32px)}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="bg"></div><div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div>
+
+<div class="wrap">
+
+  <div class="progress" id="progress">
+    <div class="prow">
+      <div class="ptxt" id="ptxt">0 / 8 題</div>
+      <div class="ptrack"><div class="pfill" id="pfill"></div></div>
+    </div>
+  </div>
+
+  <div id="formView">
+
+    <div class="card hero">
+      <div class="eyebrow"><span class="dot"></span>第二個月 · M2</div>
+      <h1>醫病溝通會談互動工作坊<br>值班時間病情解釋自評表</h1>
+      <p>課程結束後請憑今天的實際演練狀況作答，這份自評只用於了解訓練成效，不列入考核。</p>
+      <div class="meta">
+        <span class="chip">奇美醫院一般內科示範病房</span>
+        <span class="chip">6 題自評 + 2 題回饋</span>
+        <span class="chip">約 2 分鐘</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="sec-h"><div class="sec-n">1</div><div><h2>基本資料</h2><span>姓名請與簽到表一致，以利跨月份對照</span></div></div>
+      <div class="field">
+        <label class="fl">學員身份<span class="req">*</span></label>
+        <div class="pills" id="rolePills">
+          <label class="pill"><input type="radio" name="role" value="PGY1"><span>PGY1</span></label>
+          <label class="pill"><input type="radio" name="role" value="PGY2"><span>PGY2</span></label>
+          <label class="pill"><input type="radio" name="role" value="其他"><span>其他</span></label>
+        </div>
+        <div id="roleOtherWrap" style="display:none;margin-top:10px">
+          <input type="text" id="roleOther" placeholder="請填寫身份（例：實習醫學生、住院醫師）">
+        </div>
+      </div>
+      <div class="grid2">
+        <div class="field"><label class="fl" for="name">姓名<span class="req">*</span></label>
+          <input type="text" id="name" placeholder="請填寫真實姓名" autocomplete="name"></div>
+        <div class="field"><label class="fl" for="cdate">上課日期<span class="req">*</span></label>
+          <input type="date" id="cdate"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="sec-h"><div class="sec-n">2</div><div><h2>會談表現自評</h2><span>每題單選，共 6 題</span></div></div>
+      <div class="legend" id="legend"></div>
+      <div id="questions"></div>
+    </div>
+
+    <div class="card">
+      <div class="sec-h"><div class="sec-n">3</div><div><h2>個人回饋</h2><span>寫下具體情境比寫感想更有幫助</span></div></div>
+      <div class="field">
+        <label class="fl" for="best">這次溝通中，我做得最好的地方是<span class="req">*</span></label>
+        <textarea id="best" placeholder="例：家屬提到照顧人力不足時，我先停下來確認他的顧慮，才接著談出院時程。"></textarea>
+      </div>
+      <div class="field">
+        <label class="fl" for="hard">我覺得最困難的部分是<span class="req">*</span></label>
+        <textarea id="hard" placeholder="例：家屬要求再住院一週，我不知道怎麼拒絕又不讓對方覺得被推走。"></textarea>
+      </div>
+    </div>
+
+    <div class="foot">奇美醫院一般內科示範病房｜送出後資料將納入訓練紀錄，僅供教學品質分析使用。</div>
+  </div>
+
+  <div class="card done-view" id="doneView">
+    <div class="tick"><svg viewBox="0 0 24 24"><path d="M4 12.5l5.5 5.5L20 7"/></svg></div>
+    <h2>已收到你的自評</h2>
+    <p id="doneMsg">感謝填寫，這份紀錄會納入三個月的訓練成效追蹤。</p>
+    <div class="score"><b id="scoreVal">0</b><i id="scoreMax">/ 24 分　自評總分</i></div>
+    <div class="foot" style="margin-top:22px">奇美醫院一般內科示範病房｜可以關閉此頁面了。</div>
+  </div>
+
+</div>
+
+<div class="bar" id="bar">
+  <div class="bar-in">
+    <div class="hint" id="hint">請完成所有必填欄位</div>
+    <button class="btn" id="submitBtn" type="button">送出自評</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ==================================================================
+   CONFIG — 每個月開新表單時，只要改這一段
+   ================================================================== */
+const CONFIG = {
+  // ★ 已部署的 GAS 網頁應用程式網址
+  GAS_URL: "https://script.google.com/macros/s/AKfycbx2RQVGSnuiZszTkLJ8hc9ZTE8Nlpe0mG7xyo2KlIXzoTFJk2SNzEjL4p6Q63IwVbWbBQ/exec",
+
+  month: "M2",
+  monthName: "值班時間病情解釋",
+
+  // 四點量尺：分數 / 短標籤（按鈕上顯示）/ 全稱（圖例與後台）
+  scale: [
+    { v: 4, short: "完全做到", full: "完全做到" },
+    { v: 3, short: "大部分",   full: "大部分做到" },
+    { v: 2, short: "部分",     full: "部分做到" },
+    { v: 1, short: "沒做到",   full: "沒有做到" }
+  ],
+
+  questions: [
+    "能提供病人當前基本穩定狀況，並避免過度解釋病情細節",
+    "家屬溝通前，能根據手頭資料判斷病患目前狀況是否穩定，並據此決定病情解釋的範圍和深度",
+    "能確認家屬身份，並表現出適度的同理心",
+    "能引導家屬白天尋求主治醫師／醫療團隊",
+    "能尊重病人隱私並遵守「病人不在場」時病情告知的倫理與法律規範，不隨意透露敏感資訊",
+    "必要時能尋求後援及交班"
+  ]
+};
+const MAX = CONFIG.questions.length * CONFIG.scale[0].v;
+
+/* ---------- 建立畫面 ---------- */
+const $ = id => document.getElementById(id);
+
+$("legend").innerHTML = CONFIG.scale.map(s => `<span><i>${s.v}</i> ${s.full}</span>`).join("");
+
+$("cdate").value = new Date().toLocaleDateString("sv-SE");
+$("scoreMax").textContent = `/ ${MAX} 分　自評總分`;
+
+$("questions").innerHTML = CONFIG.questions.map((q, i) => `
+  <div class="q" id="q${i+1}" data-q="${i+1}">
+    <div class="qt"><span class="qn">${i+1}</span><span>${q}</span></div>
+    <div class="opts">
+      ${CONFIG.scale.map(s => `
+        <label class="opt">
+          <input type="radio" name="q${i+1}" value="${s.v}">
+          <span><b>${s.v}</b><em>${s.short}</em></span>
+        </label>`).join("")}
+    </div>
+  </div>`).join("");
+
+/* ---------- 互動 ---------- */
+$("rolePills").addEventListener("change", e => {
+  $("roleOtherWrap").style.display = e.target.value === "其他" ? "block" : "none";
+  if (e.target.value === "其他") $("roleOther").focus();
+});
+
+document.addEventListener("change", e => {
+  if (e.target.name && /^q\d+$/.test(e.target.name)) {
+    e.target.closest(".q").classList.add("done");
+    e.target.closest(".q").classList.remove("pending");
+  }
+  updateProgress();
+});
+document.addEventListener("input", () => updateProgress());
+
+function answered() {
+  return CONFIG.questions.filter((_, i) =>
+    document.querySelector(`input[name="q${i+1}"]:checked`)).length;
+}
+function updateProgress() {
+  const n = answered(), total = CONFIG.questions.length;
+  $("pfill").style.width = (n / total * 100) + "%";
+  $("ptxt").textContent = `${n} / ${total} 題`;
+  const miss = missing();
+  $("hint").innerHTML = miss.length ? `尚有 <b>${miss.length}</b> 項未完成` : "全部完成，可以送出了";
+}
+
+function missing() {
+  const m = [];
+  if (!document.querySelector('input[name="role"]:checked')) m.push({ el: $("rolePills"), t: "學員身份" });
+  else if (document.querySelector('input[name="role"]:checked').value === "其他" && !$("roleOther").value.trim())
+    m.push({ el: $("roleOther"), t: "身份說明" });
+  if (!$("name").value.trim()) m.push({ el: $("name"), t: "姓名" });
+  if (!$("cdate").value) m.push({ el: $("cdate"), t: "上課日期" });
+  CONFIG.questions.forEach((_, i) => {
+    if (!document.querySelector(`input[name="q${i+1}"]:checked`))
+      m.push({ el: $("q" + (i + 1)), t: `第 ${i + 1} 題`, q: true });
+  });
+  if (!$("best").value.trim()) m.push({ el: $("best"), t: "做得最好的地方" });
+  if (!$("hard").value.trim()) m.push({ el: $("hard"), t: "最困難的部分" });
+  return m;
+}
+
+let toastTimer;
+function toast(msg) {
+  const t = $("toast");
+  t.textContent = msg; t.classList.add("on");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove("on"), 3200);
+}
+
+/* ---------- 送出 ---------- */
+$("submitBtn").addEventListener("click", async () => {
+  document.querySelectorAll(".err").forEach(e => e.classList.remove("err"));
+  document.querySelectorAll(".pending").forEach(e => e.classList.remove("pending"));
+
+  const miss = missing();
+  if (miss.length) {
+    miss.forEach(m => m.q ? m.el.classList.add("pending") : m.el.classList.add("err"));
+    miss[0].el.scrollIntoView({ behavior: "smooth", block: "center" });
+    toast(`還有 ${miss.length} 項未完成：${miss[0].t}`);
+    return;
+  }
+
+  const roleVal = document.querySelector('input[name="role"]:checked').value;
+  const scores = CONFIG.questions.map((_, i) =>
+    Number(document.querySelector(`input[name="q${i+1}"]:checked`).value));
+  const total = scores.reduce((a, b) => a + b, 0);
+
+  const payload = {
+    month: CONFIG.month,
+    monthName: CONFIG.monthName,
+    courseDate: $("cdate").value,
+    name: $("name").value.trim(),
+    role: roleVal === "其他" ? "其他：" + $("roleOther").value.trim() : roleVal,
+    scores: scores,
+    total: total,
+    avg: Math.round(total / scores.length * 100) / 100,
+    best: $("best").value.trim(),
+    hard: $("hard").value.trim()
+  };
+
+  const btn = $("submitBtn");
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spin"></span>送出中';
+
+  const ok = await send(payload);
+
+  if (ok) {
+    $("formView").style.display = "none";
+    $("bar").style.display = "none";
+    $("progress").style.display = "none";
+    $("scoreVal").textContent = total;
+    $("doneView").classList.add("on");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  } else {
+    btn.disabled = false;
+    btn.textContent = "重新送出";
+    toast("送出失敗，請確認網路後再試一次");
+  }
+});
+
+async function send(payload) {
+  if (!CONFIG.GAS_URL || CONFIG.GAS_URL.indexOf("PASTE_") === 0) {
+    toast("尚未設定 GAS 網址（測試模式，資料未儲存）");
+    console.log("PAYLOAD:", payload);
+    return true; // 讓你先看完成畫面
+  }
+  // 用 text/plain 送出，避開 CORS preflight
+  try {
+    const res = await fetch(CONFIG.GAS_URL, {
+      method: "POST",
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body: JSON.stringify(payload)
+    });
+    const data = await res.json();
+    return data.ok === true;
+  } catch (err) {
+    // 少數瀏覽器/網路環境擋跨網域讀取，改用 no-cors 補送
+    try {
+      await fetch(CONFIG.GAS_URL, {
+        method: "POST", mode: "no-cors",
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: JSON.stringify(payload)
+      });
+      return true;
+    } catch (e2) { return false; }
+  }
+}
+
+updateProgress();
+</script>
+</body>
+</html>
