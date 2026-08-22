@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#0B1A3A">
-<title>醫病溝通會談互動工作坊｜三個月訓練成效儀表板</title>
+<title>醫病溝通會談互動工作坊｜訓練成效儀表板</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=Manrope:wght@600;800&display=swap" rel="stylesheet">
@@ -12,7 +12,7 @@
 :root{
   --ink:#0B1A3A; --muted:#64789B; --line:#DCE6F5; --hair:#EEF3FA;
   --paper:#F4F7FC; --card:#FFFFFF;
-  --m1:#1565D8; --m2:#0E7A5B; --m3:#6B2FB5;
+  --m1:#1565D8; --m2:#0E7A5B; --m3:#6B2FB5; --cross:#0B1A3A;
   --accent:#1565D8;
   --up:#0E7A5B; --down:#C4462A; --flat:#8896AE; --warn:#E4572E;
   --r:16px;
@@ -23,7 +23,6 @@ body{margin:0;background:var(--paper);color:var(--ink);line-height:1.6;
 .num{font-family:Manrope,"Noto Sans TC",sans-serif;font-variant-numeric:tabular-nums}
 .wrap{max-width:1180px;margin:0 auto;padding:0 18px}
 
-/* ---------- header ---------- */
 header{background:linear-gradient(135deg,#0B1A3A 0%,#16305C 55%,var(--accent) 145%);
   color:#fff;padding:26px 0 64px;transition:background .5s}
 .hbar{display:flex;justify-content:space-between;align-items:flex-start;gap:18px;flex-wrap:wrap}
@@ -35,35 +34,43 @@ header p{margin:0;font-size:13px;color:#B9CDE9}
 .refresh:hover{background:rgba(255,255,255,.26)}
 @media(max-width:620px){header{padding-bottom:58px}.refresh{width:100%}}
 
-/* ---------- kpi ---------- */
 .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:-42px 0 20px}
 @media(max-width:820px){.kpis{grid-template-columns:repeat(2,1fr)}}
 .kpi{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:15px 16px 13px;
   box-shadow:0 10px 26px -18px rgba(11,26,58,.55)}
 .kpi .k{font-size:11.5px;font-weight:700;color:var(--muted)}
-.kpi .v{font-size:clamp(24px,4.6vw,30px);font-weight:800;line-height:1.2;margin-top:1px}
+.kpi .v{font-size:clamp(23px,4.4vw,30px);font-weight:800;line-height:1.2;margin-top:1px}
 .kpi .s{font-size:11.5px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 
-/* ---------- tabs ---------- */
-.tabs{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;margin-bottom:16px;scrollbar-width:none}
-.tabs::-webkit-scrollbar{display:none}
+/* ---- 分頁列 ---- */
+.tabbar{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;margin-bottom:14px;scrollbar-width:none}
+.tabbar::-webkit-scrollbar{display:none}
 .tab{flex:none;border:1px solid var(--line);background:#fff;color:var(--muted);cursor:pointer;
   font-family:inherit;font-size:13.5px;font-weight:700;padding:10px 16px;border-radius:12px;
   display:flex;align-items:center;gap:8px;transition:.2s;white-space:nowrap}
 .tab i{font-style:normal;width:8px;height:8px;border-radius:50%;background:currentColor;opacity:.5}
-.tab[data-m="M1"]{--c:var(--m1)} .tab[data-m="M2"]{--c:var(--m2)} .tab[data-m="M3"]{--c:var(--m3)}
+.tab[data-c="M1"]{--c:var(--m1)} .tab[data-c="M2"]{--c:var(--m2)}
+.tab[data-c="M3"]{--c:var(--m3)} .tab[data-c="X"]{--c:var(--cross)}
 .tab.on{background:var(--c,var(--ink));border-color:transparent;color:#fff;box-shadow:0 10px 20px -13px rgba(11,26,58,.9)}
 .tab.on i{opacity:1;background:#fff}
 .tab small{font-weight:600;opacity:.75;font-size:11.5px}
+.tab.sep{margin-left:6px;border-left-width:1px}
 
-/* ---------- card ---------- */
+/* ---- 篩選列 ---- */
+.filter{display:flex;align-items:center;gap:10px;flex-wrap:wrap;background:#fff;border:1px solid var(--line);
+  border-radius:14px;padding:12px 14px;margin-bottom:16px}
+.filter label{font-size:12px;font-weight:700;color:var(--muted)}
+.filter select{font-family:inherit;font-size:13.5px;font-weight:600;border:1px solid var(--line);
+  background:#fff;border-radius:10px;padding:8px 12px;color:var(--ink);outline:none;min-width:180px}
+.filter select:focus{border-color:var(--accent);box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 15%,transparent)}
+.fnote{font-size:11.5px;color:var(--muted);flex:1;min-width:180px}
+
 .card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:20px;margin-bottom:16px}
 .card h2{margin:0 0 3px;font-size:16px;font-weight:800;letter-spacing:-.01em}
 .card .sub{margin:0 0 16px;font-size:12.5px;color:var(--muted)}
 .grid{display:grid;grid-template-columns:1.1fr .9fr;gap:16px;align-items:start}
 @media(max-width:920px){.grid{grid-template-columns:1fr}}
 
-/* ---------- 逐題 ---------- */
 .q{padding:11px 0;border-bottom:1px solid var(--hair)}
 .q:last-child{border-bottom:0;padding-bottom:0}
 .qtop{display:flex;gap:10px;align-items:baseline;margin-bottom:6px}
@@ -81,7 +88,6 @@ header p{margin:0;font-size:13px;color:#B9CDE9}
 .pill{background:color-mix(in srgb,var(--warn) 12%,#fff);color:var(--warn);
   font-size:10.5px;font-weight:800;padding:2px 8px;border-radius:99px;white-space:nowrap}
 
-/* ---------- 分布 ---------- */
 .dist{display:flex;flex-direction:column;gap:9px}
 .drow{display:flex;align-items:center;gap:10px;font-size:12.5px}
 .drow .dl{width:66px;flex:none;color:var(--muted);font-weight:600}
@@ -89,7 +95,6 @@ header p{margin:0;font-size:13px;color:#B9CDE9}
 .drow .dt i{display:block;height:100%;border-radius:7px;transition:width .6s}
 .drow .dv{width:44px;text-align:right;font-weight:800;flex:none}
 
-/* ---------- 圖表 ---------- */
 .chart{width:100%;height:auto;display:block;overflow:visible}
 .gridline{stroke:var(--hair);stroke-width:1}
 .axis{stroke:var(--line);stroke-width:1}
@@ -100,7 +105,6 @@ header p{margin:0;font-size:13px;color:#B9CDE9}
 .chip-l i{width:16px;height:3px;border-radius:2px;display:inline-block}
 .chip-l i.dash{background:repeating-linear-gradient(90deg,currentColor 0 4px,transparent 4px 8px)}
 
-/* ---------- 核心能力 ---------- */
 .corelist{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:14px}
 @media(max-width:700px){.corelist{grid-template-columns:1fr}}
 .crow{display:flex;align-items:center;gap:11px;border:1px solid var(--line);border-radius:12px;padding:10px 13px}
@@ -110,7 +114,6 @@ header p{margin:0;font-size:13px;color:#B9CDE9}
 .cdelta{font-size:13px;font-weight:800;flex:none}
 .up{color:var(--up)} .down{color:var(--down)} .flat{color:var(--flat)}
 
-/* ---------- 回饋 ---------- */
 .fbtools{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
 .fbtools select,.fbtools input{font-family:inherit;font-size:13px;border:1px solid var(--line);
   background:#fff;border-radius:10px;padding:9px 12px;color:var(--ink);outline:none}
@@ -128,7 +131,6 @@ header p{margin:0;font-size:13px;color:#B9CDE9}
 .mini{background:color-mix(in srgb,var(--accent) 11%,#fff);color:var(--accent);
   font-size:10.5px;font-weight:800;padding:2px 8px;border-radius:99px}
 
-/* ---------- 表格 ---------- */
 .tblwrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
 table{width:100%;border-collapse:collapse;font-size:13px}
 th{text-align:left;font-size:11.5px;color:var(--muted);font-weight:700;padding:9px 10px;
@@ -151,7 +153,7 @@ td.name{font-weight:700}
 .btn{background:var(--ink);color:#fff;border:0;font-family:inherit;font-size:13.5px;font-weight:700;
   padding:11px 22px;border-radius:11px;cursor:pointer}
 footer{text-align:center;font-size:11.5px;color:#94A6C0;padding:6px 0 34px}
-@media print{header{-webkit-print-color-adjust:exact;print-color-adjust:exact}.refresh,.fbtools{display:none}}
+@media print{header{-webkit-print-color-adjust:exact;print-color-adjust:exact}.refresh,.fbtools,.tabbar{display:none}}
 </style>
 </head>
 <body>
@@ -179,72 +181,84 @@ footer{text-align:center;font-size:11.5px;color:#94A6C0;padding:6px 0 34px}
 
   <div id="app" style="display:none">
 
-    <div class="kpis">
-      <div class="kpi"><div class="k">總填答人次</div><div class="v num" id="kTotal">–</div><div class="s" id="kTotalS">–</div></div>
-      <div class="kpi"><div class="k">本月填答人次</div><div class="v num" id="kMonth">–</div><div class="s" id="kMonthS">–</div></div>
-      <div class="kpi"><div class="k">本月自評平均</div><div class="v num" id="kAvg">–</div><div class="s">滿分 4.0</div></div>
-      <div class="kpi"><div class="k">完成多月份學員</div><div class="v num" id="kMulti">–</div><div class="s" id="kMultiS">–</div></div>
-    </div>
+    <div class="kpis" id="kpis"></div>
+    <div class="tabbar" id="tabs"></div>
 
-    <div class="tabs" id="tabs"></div>
+    <!-- ============ 單月份檢視 ============ -->
+    <div id="panelMonth">
+      <div class="filter">
+        <label for="cohort">梯次篩選</label>
+        <select id="cohort"></select>
+        <span class="fnote" id="cohortNote"></span>
+      </div>
 
-    <div class="grid">
+      <div class="grid">
+        <div class="card">
+          <h2 id="qTitle">逐題自評結果</h2>
+          <p class="sub" id="qSub"></p>
+          <div class="legend">
+            <span><b class="s4"></b>4 完全做到</span>
+            <span><b class="s3"></b>3 大部分做到</span>
+            <span><b class="s2"></b>2 部分做到</span>
+            <span><b class="s1"></b>1 沒有做到</span>
+          </div>
+          <div id="qList"></div>
+        </div>
+
+        <div>
+          <div class="card">
+            <h2>能力側寫</h2>
+            <p class="sub" id="radarSub"></p>
+            <div id="radar"></div>
+          </div>
+          <div class="card">
+            <h2>整體分數分布</h2>
+            <p class="sub" id="distSub"></p>
+            <div class="dist" id="dist"></div>
+          </div>
+        </div>
+      </div>
+
       <div class="card">
-        <h2 id="qTitle">逐題自評結果</h2>
-        <p class="sub" id="qSub">每題平均分與作答分布</p>
-        <div class="legend">
-          <span><b class="s4"></b>4 完全做到</span>
-          <span><b class="s3"></b>3 大部分做到</span>
-          <span><b class="s2"></b>2 部分做到</span>
-          <span><b class="s1"></b>1 沒有做到</span>
-        </div>
-        <div id="qList"></div>
+        <h2>學員個人成績</h2>
+        <p class="sub" id="rosterSub"></p>
+        <div class="tblwrap"><table id="roster"></table></div>
       </div>
 
-      <div>
-        <div class="card">
-          <h2>能力側寫</h2>
-          <p class="sub" id="radarSub">越靠外圈代表該題自評越高</p>
-          <div id="radar"></div>
+      <div class="card">
+        <h2 id="fbTitle">學員回饋原文</h2>
+        <p class="sub">質性回饋是找出教學缺口最直接的線索，可用關鍵字搜尋</p>
+        <div class="fbtools">
+          <select id="fbField"></select>
+          <input type="text" id="fbSearch" placeholder="搜尋姓名或回饋內容關鍵字">
         </div>
-        <div class="card">
-          <h2>整體分數分布</h2>
-          <p class="sub" id="distSub">本月所有作答的選項次數</p>
-          <div class="dist" id="dist"></div>
-        </div>
+        <div id="fbList"></div>
       </div>
     </div>
 
-    <div class="card">
-      <h2>學員個人成績</h2>
-      <p class="sub" id="rosterSub">依平均分排序</p>
-      <div class="tblwrap"><table id="roster"></table></div>
-    </div>
-
-    <div class="card">
-      <h2 id="fbTitle">學員回饋原文</h2>
-      <p class="sub">質性回饋是找出教學缺口最直接的線索，可用關鍵字搜尋</p>
-      <div class="fbtools">
-        <select id="fbField"></select>
-        <input type="text" id="fbSearch" placeholder="搜尋姓名或回饋內容關鍵字">
+    <!-- ============ 跨月份分析 ============ -->
+    <div id="panelCross" style="display:none">
+      <div class="filter">
+        <label for="round">梯次（Round）</label>
+        <select id="round"></select>
+        <span class="fnote" id="roundNote"></span>
       </div>
-      <div id="fbList"></div>
-    </div>
 
-    <div class="card">
-      <h2>跨月份核心能力追蹤</h2>
-      <p class="sub">同一能力構面在各月對應題目的平均分；虛線表示該月沒有對應題目、無法連續比較</p>
-      <div id="coreChart"></div>
-      <div class="corelist" id="coreList"></div>
-      <div class="note" id="coreNote"></div>
-    </div>
+      <div class="card">
+        <h2>跨月份核心能力追蹤</h2>
+        <p class="sub">同一能力構面在各月對應題目的平均分；虛線表示該月沒有對應題目、無法連續比較</p>
+        <div id="coreChart"></div>
+        <div class="corelist" id="coreList"></div>
+        <div class="note" id="coreNote"></div>
+      </div>
 
-    <div class="card">
-      <h2>個人跨月成長軌跡</h2>
-      <p class="sub">每條細線是一位學員，深色粗線為全體平均</p>
-      <div id="growthChart"></div>
-      <div class="tblwrap" style="margin-top:16px"><table id="growth"></table></div>
-      <div class="note">各月題目與題數不同，總分不可直接比較，此處一律以平均分（1–4）呈現。分數下降不必然代表退步 —— 也可能是學員對自身標準變嚴格，或該月情境本身較困難，建議搭配回饋原文一起判讀。</div>
+      <div class="card">
+        <h2>個人跨月成長軌跡</h2>
+        <p class="sub">每條細線是一位學員，深色粗線為全體平均</p>
+        <div id="growthChart"></div>
+        <div class="tblwrap" style="margin-top:16px"><table id="growth"></table></div>
+        <div class="note">各月題目與題數不同，總分不可直接比較，此處一律以平均分（1–4）呈現。分數下降不必然代表退步 —— 也可能是學員對自身標準變嚴格，或該月情境本身較困難，建議搭配回饋原文一起判讀。</div>
+      </div>
     </div>
 
     <footer id="foot"></footer>
@@ -261,7 +275,57 @@ const $ = id => document.getElementById(id);
 const esc = s => String(s == null ? "" : s)
   .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 
-let DATA = null, CUR = null;
+let DATA = null;
+let VIEW = { type: "month", idx: 0 };   // type: month | cross
+let COHORT = "ALL", ROUND = "ALL";
+let ROUNDS = [];
+
+/* ================= 工具 ================= */
+const ym  = d => String(d || "").slice(0, 7);                 // 2026-08
+const roc = s => {
+  const [y, m] = String(s || "").split("-");
+  return y ? `${Number(y) - 1911}年${Number(m)}月` : "日期未填";
+};
+
+/** 依 M1 的開課月份切分梯次：某梯次自其 M1 月份起，至下一梯 M1 月份前一天為止 */
+function buildRounds() {
+  const m1 = DATA.months.find(m => m.month === "M1");
+  const starts = m1
+    ? [...new Set(m1.records.map(r => ym(r.date)).filter(Boolean))].sort()
+    : [];
+  ROUNDS = starts.map((s, i) => ({
+    key: s, label: roc(s) + "梯", start: s,
+    end: i < starts.length - 1 ? starts[i + 1] : "9999-99"
+  }));
+  // 為每筆紀錄標上所屬梯次
+  DATA.months.forEach(m => m.records.forEach(r => {
+    const t = ym(r.date);
+    const hit = ROUNDS.filter(R => t >= R.start && t < R.end).pop();
+    r._ym = t;
+    r._round = hit ? hit.key : "UNASSIGNED";
+  }));
+}
+
+function monthRecords(m, cohort) {
+  return (!cohort || cohort === "ALL") ? m.records : m.records.filter(r => r._ym === cohort);
+}
+function roundRecords(m, round) {
+  return (!round || round === "ALL") ? m.records : m.records.filter(r => r._round === round);
+}
+
+/** 由紀錄重新計算逐題平均與分布 */
+function calcQuestions(recs, labels) {
+  return labels.map((L, i) => {
+    const vals = recs.map(r => Number(r.scores[i])).filter(v => v > 0);
+    const dist = { 4: 0, 3: 0, 2: 0, 1: 0 };
+    vals.forEach(v => { if (dist[v] !== undefined) dist[v]++; });
+    const sum = vals.reduce((a, b) => a + b, 0);
+    return { no: i + 1, label: L, n: vals.length, dist,
+             avg: vals.length ? Math.round(sum / vals.length * 100) / 100 : 0 };
+  });
+}
+const meanAvg = recs => recs.length
+  ? Math.round(recs.reduce((a, r) => a + r.avg, 0) / recs.length * 100) / 100 : 0;
 
 /* ================= 讀取 ================= */
 async function load() {
@@ -284,6 +348,7 @@ async function load() {
       $("errMsg").textContent = "後端連線正常，但試算表目前沒有任何自評紀錄。";
       return;
     }
+    buildRounds();
     render();
   } catch (err) {
     $("loading").style.display = "none";
@@ -305,15 +370,12 @@ function jsonp(url) {
   });
 }
 
-/* ================= 圖表（純 SVG，不依賴外部套件） ================= */
-
-/** 折線圖本體，回傳 <g> 內容字串 */
-function linePaths(series, xLabels, X, Y, opt) {
+/* ================= 圖表 ================= */
+function linePaths(series, X, Y, opt) {
   let g = "";
   series.forEach(s => {
-    const pts = s.points.map((v, i) => v == null ? null : { x: X(i), y: Y(v), v: v });
+    const pts = s.points.map((v, i) => v == null ? null : { x: X(i), y: Y(v), v });
     const real = pts.map((p, i) => p ? i : -1).filter(i => i >= 0);
-
     for (let k = 0; k < real.length - 1; k++) {
       const a = pts[real[k]], b = pts[real[k + 1]];
       const gap = real[k + 1] - real[k] > 1;
@@ -328,16 +390,14 @@ function linePaths(series, xLabels, X, Y, opt) {
       if (!opt.thin && opt.showValues !== false)
         g += `<text class="ptlab" x="${p.x}" y="${p.y - 11}" text-anchor="middle" fill="${s.color}">${p.v.toFixed(2)}</text>`;
     });
-    // 單點無法連線時標註
     if (real.length === 1 && !opt.thin) {
       const p = pts[real[0]];
-      g += `<text class="axtx" x="${p.x}" y="${p.y + 18}" text-anchor="middle">僅單月資料</text>`;
+      g += `<text class="axtx" x="${p.x}" y="${p.y + 19}" text-anchor="middle">僅單月資料</text>`;
     }
   });
   return g;
 }
 
-/** 折線圖外框（座標軸＋格線），可疊加多組 series */
 function lineChart(groups, xLabels, opt) {
   opt = opt || {};
   const W = 720, H = opt.height || 300;
@@ -358,20 +418,15 @@ function lineChart(groups, xLabels, opt) {
     if (opt.subLabels && opt.subLabels[i])
       g += `<text class="axtx" x="${X(i)}" y="${P.t + ih + 36}" text-anchor="middle" font-size="10.5">${esc(opt.subLabels[i])}</text>`;
   });
-
-  groups.forEach(grp => { g += linePaths(grp.series, xLabels, X, Y, grp.opt || {}); });
-
+  groups.forEach(grp => { g += linePaths(grp.series, X, Y, grp.opt || {}); });
   return `<svg class="chart" viewBox="0 0 ${W} ${H}" role="img" aria-label="折線圖">${g}</svg>`;
 }
 
-/** 雷達圖 */
 function radarChart(vals, color) {
-  const S = 320, C = S / 2, R = 104;
-  const n = vals.length;
+  const S = 320, C = S / 2, R = 104, n = vals.length;
   if (!n) return "";
   const ang = i => (Math.PI * 2 * i / n) - Math.PI / 2;
   const pt = (i, v) => [C + Math.cos(ang(i)) * (v / 4) * R, C + Math.sin(ang(i)) * (v / 4) * R];
-
   let g = "";
   [1, 2, 3, 4].forEach(r => {
     const poly = Array.from({ length: n }, (_, i) => pt(i, r).join(",")).join(" ");
@@ -395,51 +450,90 @@ function radarChart(vals, color) {
            role="img" aria-label="能力側寫雷達圖">${g}</svg>`;
 }
 
-/* ================= 繪製 ================= */
+/* ================= 分頁 ================= */
 function render() {
   $("loading").style.display = "none";
   $("app").style.display = "block";
 
-  $("tabs").innerHTML = DATA.months.map((m, i) => `
-    <button class="tab${i === 0 ? " on" : ""}" data-m="${esc(m.month)}" data-i="${i}">
-      <i></i>${esc(m.month)}　${esc(m.theme)}<small>${m.n} 人</small>
-    </button>`).join("");
+  $("tabs").innerHTML =
+    DATA.months.map((m, i) => `
+      <button class="tab${VIEW.type === "month" && VIEW.idx === i ? " on" : ""}"
+        data-c="${esc(m.month)}" data-type="month" data-i="${i}">
+        <i></i>${esc(m.month)}　${esc(m.theme)}<small>${m.n} 人</small>
+      </button>`).join("") +
+    `<button class="tab sep${VIEW.type === "cross" ? " on" : ""}" data-c="X" data-type="cross">
+      <i></i>跨月份分析<small>成長追蹤</small></button>`;
 
   $("tabs").querySelectorAll(".tab").forEach(b => {
     b.addEventListener("click", () => {
+      VIEW = b.dataset.type === "cross" ? { type: "cross" } : { type: "month", idx: Number(b.dataset.i) };
       $("tabs").querySelectorAll(".tab").forEach(x => x.classList.remove("on"));
       b.classList.add("on");
-      showMonth(Number(b.dataset.i));
+      if (VIEW.type === "month") { COHORT = "ALL"; showMonth(); } else { showCross(); }
     });
   });
 
-  const multi = DATA.growth.filter(g => g.filled.length > 1).length;
-  $("kTotal").textContent  = DATA.totalRecords;
-  $("kTotalS").textContent = `涵蓋 ${DATA.months.length} 個月份主題`;
-  $("kMulti").textContent  = multi;
-  $("kMultiS").textContent = `共 ${DATA.growth.length} 位學員留下紀錄`;
-
-  renderCore();
-  renderGrowth();
   $("foot").textContent = "資料更新時間：" + new Date(DATA.generated).toLocaleString("zh-TW");
-  showMonth(0);
+  showMonth();
 }
 
-function showMonth(i) {
-  const m = DATA.months[i];
-  CUR = m;
+function kpi(list) {
+  $("kpis").innerHTML = list.map(k => `
+    <div class="kpi"><div class="k">${esc(k.k)}</div>
+      <div class="v num">${esc(k.v)}</div><div class="s">${esc(k.s)}</div></div>`).join("");
+}
+
+/* ---------- 單月份 ---------- */
+function showMonth() {
+  $("panelMonth").style.display = "block";
+  $("panelCross").style.display = "none";
+
+  const m = DATA.months[VIEW.idx];
   const color = MONTH_COLOR[m.month] || "#1565D8";
   document.documentElement.style.setProperty("--accent", color);
 
-  $("hsub").textContent = `${m.month}　${m.theme}　·　${m.qCount} 題自評（滿分 ${m.maxScore} 分）`;
-  $("kMonth").textContent  = m.n;
-  $("kMonthS").textContent = m.theme;
-  $("kAvg").textContent    = m.avgAll.toFixed(2);
+  // 梯次選單（該月實際有資料的開課月份）
+  const cohorts = [...new Set(m.records.map(r => r._ym).filter(Boolean))].sort();
+  $("cohort").innerHTML =
+    `<option value="ALL">全部梯次（${m.records.length} 人次）</option>` +
+    cohorts.map(c => {
+      const n = m.records.filter(r => r._ym === c).length;
+      return `<option value="${esc(c)}"${c === COHORT ? " selected" : ""}>${esc(roc(c))}梯（${n} 人）</option>`;
+    }).join("");
+  $("cohort").value = COHORT;
+  $("cohortNote").textContent = cohorts.length > 1
+    ? `此月份共有 ${cohorts.length} 個梯次的紀錄，可分開檢視`
+    : "目前只有一個梯次的紀錄";
 
-  const weakest = m.questions.slice().sort((a, b) => a.avg - b.avg)[0];
+  const recs = monthRecords(m, COHORT);
+  const labels = m.questions.map(q => q.label);
+  const qs = calcQuestions(recs, labels);
+  const avgAll = meanAvg(recs);
+  const cohortName = COHORT === "ALL" ? "全部梯次" : roc(COHORT) + "梯";
+
+  $("hsub").textContent = `${m.month}　${m.theme}　·　${m.qCount} 題自評（滿分 ${m.maxScore} 分）　·　${cohortName}`;
+
+  kpi([
+    { k: "本月填答人次", v: recs.length, s: cohortName },
+    { k: "本月自評平均", v: avgAll.toFixed(2), s: "滿分 4.0" },
+    { k: "最需加強題目",
+      v: recs.length ? "第 " + qs.slice().sort((a, b) => a.avg - b.avg)[0].no + " 題" : "–",
+      s: recs.length ? qs.slice().sort((a, b) => a.avg - b.avg)[0].avg.toFixed(2) + " 分" : "尚無資料" },
+    { k: "全部月份總人次", v: DATA.totalRecords, s: `涵蓋 ${DATA.months.length} 個月份主題` }
+  ]);
+
+  if (!recs.length) {
+    $("qList").innerHTML = '<div class="empty">此梯次尚無填答紀錄</div>';
+    $("radar").innerHTML = ""; $("dist").innerHTML = "";
+    $("roster").innerHTML = ""; $("fbList").innerHTML = '<div class="empty">尚無回饋內容</div>';
+    $("qSub").textContent = ""; $("rosterSub").textContent = ""; $("distSub").textContent = "";
+    return;
+  }
+
+  const weakest = qs.slice().sort((a, b) => a.avg - b.avg)[0];
   $("qTitle").textContent = `逐題自評結果 — ${m.theme}`;
-  $("qSub").textContent   = `共 ${m.n} 位學員作答`;
-  $("qList").innerHTML = m.questions.map(q => {
+  $("qSub").textContent   = `${cohortName}，共 ${recs.length} 位學員作答`;
+  $("qList").innerHTML = qs.map(q => {
     const t = q.n || 1;
     const w = v => (q.dist[v] / t * 100).toFixed(2) + "%";
     const weak = weakest && q.no === weakest.no && q.avg < 3.5;
@@ -451,44 +545,37 @@ function showMonth(i) {
           <span class="qavg num">${q.avg.toFixed(2)}</span>
         </div>
         <div class="bar">
-          <span class="s4" style="width:${w(4)}"></span>
-          <span class="s3" style="width:${w(3)}"></span>
-          <span class="s2" style="width:${w(2)}"></span>
-          <span class="s1" style="width:${w(1)}"></span>
+          <span class="s4" style="width:${w(4)}"></span><span class="s3" style="width:${w(3)}"></span>
+          <span class="s2" style="width:${w(2)}"></span><span class="s1" style="width:${w(1)}"></span>
         </div>
-        <div class="qmeta">
-          <span>完全做到 ${q.dist[4]}</span><span>大部分 ${q.dist[3]}</span>
-          <span>部分 ${q.dist[2]}</span><span>沒做到 ${q.dist[1]}</span>
-        </div>
+        <div class="qmeta"><span>完全做到 ${q.dist[4]}</span><span>大部分 ${q.dist[3]}</span>
+          <span>部分 ${q.dist[2]}</span><span>沒做到 ${q.dist[1]}</span></div>
       </div>`;
   }).join("");
 
-  $("radar").innerHTML = radarChart(m.questions, color);
-  $("radarSub").textContent = `外圈為 4 分，數字對應左側題號；凹陷處即本月教學缺口`;
+  $("radar").innerHTML = radarChart(qs, color);
+  $("radarSub").textContent = "外圈為 4 分，數字對應左側題號；凹陷處即本梯次的教學缺口";
 
   const tot = { 4: 0, 3: 0, 2: 0, 1: 0 };
-  m.questions.forEach(q => [4, 3, 2, 1].forEach(v => tot[v] += q.dist[v]));
+  qs.forEach(q => [4, 3, 2, 1].forEach(v => tot[v] += q.dist[v]));
   const all = tot[4] + tot[3] + tot[2] + tot[1] || 1;
   const NAME = { 4: "完全做到", 3: "大部分", 2: "部分", 1: "沒做到" };
-  $("distSub").textContent = `本月 ${all} 筆作答的選項次數`;
+  $("distSub").textContent = `${cohortName} 共 ${all} 筆作答`;
   $("dist").innerHTML = [4, 3, 2, 1].map(v => `
-    <div class="drow">
-      <span class="dl">${NAME[v]}</span>
+    <div class="drow"><span class="dl">${NAME[v]}</span>
       <span class="dt"><i class="s${v}" style="width:${(tot[v] / all * 100).toFixed(2)}%"></i></span>
-      <span class="dv num">${(tot[v] / all * 100).toFixed(0)}%</span>
-    </div>`).join("");
+      <span class="dv num">${(tot[v] / all * 100).toFixed(0)}%</span></div>`).join("");
 
-  const rs = m.records.slice().sort((a, b) => b.avg - a.avg);
-  $("rosterSub").textContent = `${m.n} 位學員，依平均分排序`;
+  const rs = recs.slice().sort((a, b) => b.avg - a.avg);
+  $("rosterSub").textContent = `${cohortName}，${recs.length} 位學員，依平均分排序`;
   $("roster").innerHTML = `
-    <thead><tr><th>姓名</th><th>身份</th><th>上課日期</th><th>總分</th><th>平均</th></tr></thead>
+    <thead><tr><th>姓名</th><th>身份</th><th>上課日期</th><th>梯次</th><th>總分</th><th>平均</th></tr></thead>
     <tbody>${rs.map(r => `
       <tr><td class="name">${esc(r.name)}</td>
       <td><span class="tag">${esc(r.role)}</span></td>
-      <td>${esc(r.date)}</td>
+      <td>${esc(r.date)}</td><td><span class="tag">${esc(roc(r._ym))}</span></td>
       <td class="num">${r.total} / ${m.maxScore}</td>
-      <td class="num" style="font-weight:800">${r.avg.toFixed(2)}</td></tr>`).join("")}
-    </tbody>`;
+      <td class="num" style="font-weight:800">${r.avg.toFixed(2)}</td></tr>`).join("")}</tbody>`;
 
   $("fbTitle").textContent = `學員回饋原文 — ${m.theme}`;
   $("fbField").innerHTML = '<option value="">全部題目</option>' +
@@ -498,11 +585,12 @@ function showMonth(i) {
 }
 
 function renderFeedback() {
-  const m = CUR;
+  const m = DATA.months[VIEW.idx];
+  const recs = monthRecords(m, COHORT);
   const field = $("fbField").value;
   const kw = $("fbSearch").value.trim().toLowerCase();
 
-  const rows = m.records.map(r => {
+  const rows = recs.map(r => {
     const opens = r.opens.filter(o => (!field || o.label === field) && o.value.trim());
     if (!opens.length) return null;
     if (kw && !r.name.toLowerCase().includes(kw) &&
@@ -510,80 +598,135 @@ function renderFeedback() {
     return { r, opens };
   }).filter(Boolean);
 
-  if (!rows.length) {
-    $("fbList").innerHTML = '<div class="empty">沒有符合條件的回饋內容</div>';
-    return;
-  }
+  if (!rows.length) { $("fbList").innerHTML = '<div class="empty">沒有符合條件的回饋內容</div>'; return; }
   $("fbList").innerHTML = rows.map(({ r, opens }) => `
     <div class="fb">
       <div class="fbh"><b>${esc(r.name)}</b>
-        <span class="tag">${esc(r.role)}</span>
-        <span>${esc(r.date)}</span>
+        <span class="tag">${esc(r.role)}</span><span>${esc(r.date)}</span>
         <span class="mini">平均 ${r.avg.toFixed(2)}</span></div>
       ${opens.map(o => `<div class="fbq">${esc(o.label)}</div><div class="fbv">${esc(o.value)}</div>`).join("")}
     </div>`).join("");
 }
-document.addEventListener("input",  e => { if (e.target.id === "fbSearch") renderFeedback(); });
-document.addEventListener("change", e => { if (e.target.id === "fbField")  renderFeedback(); });
 
-/* ---------- 核心能力 ---------- */
-function renderCore() {
-  const ms = DATA.months.map(m => m.month);
+/* ---------- 跨月份 ---------- */
+function showCross() {
+  $("panelMonth").style.display = "none";
+  $("panelCross").style.display = "block";
+  document.documentElement.style.setProperty("--accent", "#0B1A3A");
+
+  const totalAll = DATA.months.reduce((a, m) => a + m.records.length, 0);
+  $("round").innerHTML =
+    `<option value="ALL">全部梯次（${totalAll} 人次）</option>` +
+    ROUNDS.map(R => {
+      const n = DATA.months.reduce((a, m) => a + m.records.filter(r => r._round === R.key).length, 0);
+      return `<option value="${esc(R.key)}">${esc(R.label)}（${n} 人次）</option>`;
+    }).join("");
+  $("round").value = ROUND;
+
+  $("roundNote").textContent = ROUNDS.length
+    ? `梯次以 M1 開課月份切分：自該月起至下一梯 M1 開課前的紀錄，視為同一梯`
+    : "尚無 M1 紀錄，無法切分梯次";
+
+  const ms     = DATA.months.map(m => m.month);
   const themes = DATA.months.map(m => m.theme);
+  const filtered = DATA.months.map(m => ({ m, recs: roundRecords(m, ROUND) }));
 
-  const series = DATA.core.map((c, k) => {
-    const byM = {}; c.points.forEach(p => byM[p.month] = p);
+  const roundName = ROUND === "ALL" ? "全部梯次"
+    : (ROUNDS.find(R => R.key === ROUND) || {}).label || ROUND;
+  $("hsub").textContent = `跨月份分析　·　${roundName}`;
+
+  // 逐月逐題重算
+  const qsByMonth = {};
+  filtered.forEach(({ m, recs }) => {
+    qsByMonth[m.month] = calcQuestions(recs, m.questions.map(q => q.label));
+  });
+
+  // 個人成長
+  const byPerson = {};
+  filtered.forEach(({ m, recs }) => recs.forEach(r => {
+    const key = r._round + "|" + r.name.replace(/\s+/g, "");
+    if (!byPerson[key]) byPerson[key] = { name: r.name, role: r.role, round: r._round, months: {} };
+    byPerson[key].months[m.month] = r.avg;
+  }));
+  const people = Object.values(byPerson).map(p => {
+    const f = ms.filter(mo => p.months[mo] != null);
+    return { ...p, filled: f, first: p.months[f[0]], last: p.months[f[f.length - 1]],
+      delta: f.length > 1 ? Math.round((p.months[f[f.length - 1]] - p.months[f[0]]) * 100) / 100 : null };
+  }).sort((a, b) => b.filled.length - a.filled.length);
+
+  const multi = people.filter(p => p.filled.length > 1).length;
+  const deltas = people.map(p => p.delta).filter(d => d != null);
+  const avgDelta = deltas.length
+    ? Math.round(deltas.reduce((a, b) => a + b, 0) / deltas.length * 100) / 100 : null;
+
+  kpi([
+    { k: "篩選後填答人次", v: filtered.reduce((a, f) => a + f.recs.length, 0), s: roundName },
+    { k: "可追蹤學員", v: multi, s: `完成 2 個月以上（共 ${people.length} 人）` },
+    { k: "平均變化", v: avgDelta == null ? "–" : (avgDelta > 0 ? "+" : "") + avgDelta.toFixed(2),
+      s: avgDelta == null ? "需 2 個月以上資料" : "首月 → 末月平均分" },
+    { k: "梯次數", v: ROUNDS.length, s: "以 M1 開課月份切分" }
+  ]);
+
+  /* 核心能力 */
+  const coreMap = DATA.coreMap || {};
+  const series = Object.keys(coreMap).map((name, k) => {
+    const map = coreMap[name];
     return {
-      name: c.name, color: SERIES[k % SERIES.length],
-      points: ms.map(mo => byM[mo] ? byM[mo].avg : null),
-      covered: c.covered
+      name, color: SERIES[k % SERIES.length],
+      points: ms.map(mo => {
+        const qNo = map[mo];
+        const qs = qsByMonth[mo];
+        if (!qNo || !qs || !qs[qNo - 1] || qs[qNo - 1].n === 0) return null;
+        return qs[qNo - 1].avg;
+      })
     };
   });
 
-  $("coreChart").innerHTML =
-    lineChart([{ series: series, opt: { showValues: false } }], ms, { height: 300, subLabels: themes }) +
-    `<div class="chip-l">${series.map(s =>
-      `<span style="color:${s.color}"><i style="background:${s.color}"></i>
-       <b style="color:var(--ink);font-weight:700">${esc(s.name)}</b></span>`).join("")}
-     <span style="color:var(--muted)"><i class="dash" style="color:var(--muted)"></i>虛線：中間月份無對應題目</span></div>`;
+  const anyData = series.some(s => s.points.some(v => v != null));
+  if (!anyData) {
+    $("coreChart").innerHTML = '<div class="empty">此梯次尚無足夠資料</div>';
+    $("coreList").innerHTML = ""; $("coreNote").textContent = "";
+  } else {
+    $("coreChart").innerHTML =
+      lineChart([{ series, opt: { showValues: false } }], ms, { height: 300, subLabels: themes }) +
+      `<div class="chip-l">${series.map(s =>
+        `<span style="color:${s.color}"><i style="background:${s.color}"></i>
+         <b style="color:var(--ink);font-weight:700">${esc(s.name)}</b></span>`).join("")}
+       <span style="color:var(--muted)"><i class="dash" style="color:var(--muted)"></i>虛線：中間月份無對應題目</span></div>`;
 
-  $("coreList").innerHTML = series.map(s => {
-    const real = s.points.filter(v => v != null);
-    const d = real.length > 1 ? Math.round((real[real.length - 1] - real[0]) * 100) / 100 : null;
-    const cls = d == null ? "flat" : d > 0 ? "up" : d < 0 ? "down" : "flat";
-    const txt = d == null ? "資料不足" : (d > 0 ? "▲ +" : d < 0 ? "▼ " : "＝ ") + d.toFixed(2);
-    const miss = ms.filter((mo, i) => s.points[i] == null);
-    return `
-      <div class="crow">
+    $("coreList").innerHTML = series.map(s => {
+      const real = s.points.filter(v => v != null);
+      const d = real.length > 1 ? Math.round((real[real.length - 1] - real[0]) * 100) / 100 : null;
+      const cls = d == null ? "flat" : d > 0 ? "up" : d < 0 ? "down" : "flat";
+      const txt = d == null ? "資料不足" : (d > 0 ? "▲ +" : d < 0 ? "▼ " : "＝ ") + d.toFixed(2);
+      const miss = ms.filter((mo, i) => s.points[i] == null);
+      return `<div class="crow">
         <span class="cdot" style="background:${s.color}"></span>
         <span class="cname">${esc(s.name)}
-          <em>${s.covered}/${ms.length} 個月有題目${miss.length ? "・缺 " + miss.join("、") : ""}</em></span>
-        <span class="cdelta ${cls}">${txt}</span>
-      </div>`;
-  }).join("");
+          <em>${real.length}/${ms.length} 個月有資料${miss.length ? "・缺 " + miss.join("、") : ""}</em></span>
+        <span class="cdelta ${cls}">${txt}</span></div>`;
+    }).join("");
 
-  const full = DATA.core.filter(c => c.covered === DATA.months.length).map(c => c.name);
-  const part = DATA.core.filter(c => c.covered < DATA.months.length).map(c => c.name);
-  $("coreNote").innerHTML = full.length
-    ? `只有<b>${esc(full.join("、"))}</b>在每個月都有對應題目，是目前唯一能完整說明「三個月是否成長」的構面。`
-      + (part.length ? `<b>${esc(part.join("、"))}</b>缺少部分月份題目，折線以虛線帶過，只能做局部比較；要補齊需在缺漏月份的自評表加入對應題目。` : "")
-    : "目前沒有任何構面在每個月都有對應題目，跨月成長比較的證據力有限。";
-}
+    const full = series.filter(s => s.points.every(v => v != null)).map(s => s.name);
+    const part = series.filter(s => !s.points.every(v => v != null)).map(s => s.name);
+    $("coreNote").innerHTML = full.length
+      ? `在此篩選條件下，<b>${esc(full.join("、"))}</b>每個月都有資料，是唯一能完整說明成長的構面。`
+        + (part.length ? `<b>${esc(part.join("、"))}</b>缺少部分月份，折線以虛線帶過，只能做局部比較。` : "")
+      : "目前沒有任何構面在每個月都有資料，跨月比較的證據力有限。";
+  }
 
-/* ---------- 個人成長 ---------- */
-function renderGrowth() {
-  const ms = DATA.months.map(m => m.month);
-  const themes = DATA.months.map(m => m.theme);
-  const g = DATA.growth;
-  if (!g.length) { $("growthChart").innerHTML = ""; $("growth").innerHTML = ""; return; }
-
-  const lines = g.map(p => ({
+  /* 個人成長 */
+  if (!people.length) {
+    $("growthChart").innerHTML = '<div class="empty">此梯次尚無填答紀錄</div>';
+    $("growth").innerHTML = "";
+    return;
+  }
+  const lines = people.map(p => ({
     name: p.name, color: "#5B7BA6",
     points: ms.map(mo => p.months[mo] != null ? p.months[mo] : null)
   }));
-
   const mean = ms.map(mo => {
-    const v = g.map(p => p.months[mo]).filter(x => x != null);
+    const v = people.map(p => p.months[mo]).filter(x => x != null);
     return v.length ? Math.round(v.reduce((a, b) => a + b, 0) / v.length * 100) / 100 : null;
   });
 
@@ -597,24 +740,32 @@ function renderGrowth() {
        <span style="color:#0B1A3A"><i style="background:#0B1A3A"></i><b style="font-weight:700">全體平均</b></span>
      </div>`;
 
+  const showRound = ROUND === "ALL" && ROUNDS.length > 1;
   $("growth").innerHTML = `
-    <thead><tr><th>姓名</th><th>身份</th>
+    <thead><tr><th>姓名</th><th>身份</th>${showRound ? "<th>梯次</th>" : ""}
       ${ms.map(m => `<th>${esc(m)}</th>`).join("")}
       <th>變化</th><th>完成月數</th></tr></thead>
-    <tbody>${g.map(p => {
+    <tbody>${people.map(p => {
       const d = p.delta;
       const cls = d === null ? "flat" : d > 0 ? "up" : d < 0 ? "down" : "flat";
       const txt = d === null ? "—" : (d > 0 ? "▲ +" : d < 0 ? "▼ " : "＝ ") + d.toFixed(2);
       return `<tr>
         <td class="name">${esc(p.name)}</td>
         <td><span class="tag">${esc(p.role)}</span></td>
+        ${showRound ? `<td><span class="tag">${esc(roc(p.round))}</span></td>` : ""}
         ${ms.map(m => `<td class="num">${p.months[m] != null ? p.months[m].toFixed(2) : "–"}</td>`).join("")}
         <td class="delta ${cls}">${txt}</td>
-        <td>${p.filled.length} / ${ms.length}</td>
-      </tr>`;
+        <td>${p.filled.length} / ${ms.length}</td></tr>`;
     }).join("")}</tbody>`;
 }
 
+/* ================= 事件 ================= */
+document.addEventListener("change", e => {
+  if (e.target.id === "cohort") { COHORT = e.target.value; showMonth(); }
+  if (e.target.id === "round")  { ROUND  = e.target.value; showCross(); }
+  if (e.target.id === "fbField") renderFeedback();
+});
+document.addEventListener("input", e => { if (e.target.id === "fbSearch") renderFeedback(); });
 $("refresh").addEventListener("click", load);
 load();
 </script>
