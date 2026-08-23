@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0A2540">
+<title>醫病溝通會談互動工作坊｜教師評核表</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  /* 由 JS 依主題切換 */
+  --deep:#0A2540; --navy:#123B6B; --main:#1565D8; --azure:#2B8FFF; --cyan:#4FC3F7;
+  --mainRGB:21,101,216; --azureRGB:43,143,255; --cyanRGB:79,195,247; --deepRGB:10,37,64;
+  --ice:#EAF3FF; --paper:#F7FBFF; --paperRGB:247,251,255;
+  --muted:#5A7392; --heroP:#BFDBFF; --footC:#8AA3C0;
+  --b1:#8FC6FF; --b2:#7FE3FF; --b3:#B9D4FF;
+  --bg1:#DCEBFF; --bg2:#E4F6FF; --bg3:#E2EFFF;
+  --warn:#E4572E; --ok:#0EA47A;
+  --r:20px; --shadow:0 18px 44px -18px rgba(var(--deepRGB),.38);
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0}
+body{font-family:"Noto Sans TC","Microsoft JhengHei",system-ui,-apple-system,sans-serif;
+  color:var(--deep);background:var(--paper);min-height:100vh;overflow-x:hidden;line-height:1.65;
+  padding-bottom:calc(96px + env(safe-area-inset-bottom));transition:background .45s}
+
+.bg{position:fixed;inset:0;z-index:-2;transition:background .45s;background:
+  radial-gradient(120% 90% at 10% 0%,var(--bg1) 0%,transparent 60%),
+  radial-gradient(110% 80% at 100% 10%,var(--bg2) 0%,transparent 55%),
+  linear-gradient(175deg,var(--paper) 0%,var(--ice) 55%,var(--bg3) 100%)}
+.blob{position:fixed;z-index:-1;border-radius:50%;filter:blur(60px);opacity:.5;pointer-events:none;transition:background .45s}
+.b1{width:52vw;height:52vw;max-width:460px;max-height:460px;top:-14vh;left:-16vw;
+  background:radial-gradient(circle at 35% 35%,var(--b1),transparent 70%);animation:drift 22s ease-in-out infinite}
+.b2{width:46vw;height:46vw;max-width:400px;max-height:400px;top:38vh;right:-18vw;
+  background:radial-gradient(circle at 60% 40%,var(--b2),transparent 70%);animation:drift 28s ease-in-out infinite reverse}
+.b3{width:44vw;height:44vw;max-width:380px;max-height:380px;bottom:-12vh;left:12vw;
+  background:radial-gradient(circle at 50% 50%,var(--b3),transparent 72%);animation:drift 34s ease-in-out infinite}
+@keyframes drift{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(6vw,-4vh) scale(1.08)}66%{transform:translate(-5vw,5vh) scale(.94)}}
+
+.wrap{max-width:820px;margin:0 auto;padding:20px 16px 0}
+
+.progress{position:sticky;top:0;z-index:30;margin:0 -16px 18px;padding:10px 16px;
+  padding-top:calc(10px + env(safe-area-inset-top));
+  background:rgba(var(--paperRGB),.72);backdrop-filter:blur(16px) saturate(160%);
+  -webkit-backdrop-filter:blur(16px) saturate(160%);border-bottom:1px solid rgba(var(--mainRGB),.10)}
+.prow{display:flex;align-items:center;gap:12px}
+.ptxt{font-size:12.5px;font-weight:700;color:var(--navy);white-space:nowrap}
+.ptrack{flex:1;height:12px;border-radius:99px;background:rgba(var(--mainRGB),.12);overflow:hidden;position:relative}
+.pfill{position:absolute;inset:0 auto 0 0;width:0%;border-radius:99px;overflow:hidden;
+  background:linear-gradient(90deg,var(--main),var(--azure) 55%,var(--cyan));
+  transition:width .5s cubic-bezier(.4,1.3,.5,1)}
+.pfill::after{content:"";position:absolute;top:-8px;left:0;width:200%;height:200%;
+  background:radial-gradient(60% 42% at 25% 0,rgba(255,255,255,.55),transparent 60%),
+             radial-gradient(60% 42% at 75% 0,rgba(255,255,255,.4),transparent 60%);
+  animation:wave 3.2s linear infinite}
+@keyframes wave{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+
+.card{background:rgba(255,255,255,.72);backdrop-filter:blur(22px) saturate(170%);
+  -webkit-backdrop-filter:blur(22px) saturate(170%);border:1px solid rgba(255,255,255,.85);
+  border-radius:var(--r);box-shadow:var(--shadow);padding:22px 20px;margin-bottom:16px;position:relative;overflow:hidden}
+.card::before{content:"";position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.95),transparent)}
+
+.hero{background:linear-gradient(150deg,var(--deep) 0%,var(--navy) 48%,var(--main) 100%);
+  color:#fff;border:0;padding:26px 22px;transition:background .45s}
+.hero::after{content:"";position:absolute;right:-70px;bottom:-90px;width:250px;height:250px;border-radius:50%;
+  background:radial-gradient(circle at 40% 40%,rgba(var(--cyanRGB),.5),transparent 68%)}
+.eyebrow{display:inline-flex;align-items:center;gap:7px;font-size:11.5px;font-weight:700;letter-spacing:.16em;
+  background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.3);padding:5px 12px;border-radius:99px;margin-bottom:14px}
+.dot{width:6px;height:6px;border-radius:50%;background:var(--cyan);box-shadow:0 0 0 4px rgba(var(--cyanRGB),.24)}
+.hero h1{margin:0 0 6px;font-size:clamp(20px,5vw,27px);font-weight:900;line-height:1.35;position:relative;z-index:1}
+.hero p{margin:0;font-size:13.5px;color:var(--heroP);position:relative;z-index:1}
+.meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px;position:relative;z-index:1}
+.chip{font-size:12px;font-weight:600;background:rgba(255,255,255,.13);border:1px solid rgba(255,255,255,.22);
+  padding:5px 11px;border-radius:10px}
+
+.sec-h{display:flex;align-items:center;gap:10px;margin:0 0 16px}
+.sec-n{width:30px;height:30px;flex:none;border-radius:10px;display:grid;place-items:center;
+  background:linear-gradient(140deg,var(--main),var(--cyan));color:#fff;font-size:13px;font-weight:900;
+  box-shadow:0 6px 14px -5px rgba(var(--mainRGB),.65)}
+.sec-h h2{margin:0;font-size:16.5px;font-weight:800}
+.sec-h span{font-size:12px;color:var(--muted);font-weight:500}
+
+label.fl{display:block;font-size:13px;font-weight:700;color:var(--navy);margin:0 0 7px}
+.req{color:var(--warn);margin-left:3px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:560px){.grid2{grid-template-columns:1fr}}
+input[type=text],input[type=date],select,textarea{width:100%;font-family:inherit;font-size:15px;color:var(--deep);
+  background:rgba(255,255,255,.9);border:1.5px solid rgba(var(--mainRGB),.16);border-radius:13px;
+  padding:12px 14px;outline:none;transition:.22s;appearance:none}
+select{background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='none' stroke='%23708AA8' stroke-width='2'><path d='M4 6l4 4 4-4'/></svg>");
+  background-repeat:no-repeat;background-position:right 14px center}
+textarea{min-height:104px;resize:vertical;line-height:1.75}
+input:focus,select:focus,textarea:focus{border-color:var(--azure);background:#fff;box-shadow:0 0 0 4px rgba(var(--azureRGB),.14)}
+input.err,select.err,textarea.err{border-color:var(--warn);box-shadow:0 0 0 4px rgba(228,87,46,.12)}
+.field{margin-bottom:14px}
+.field:last-child{margin-bottom:0}
+.hintline{font-size:11.5px;color:var(--muted);margin-top:6px;line-height:1.5}
+.hintline b{color:var(--main)}
+
+.pills{display:flex;gap:8px;flex-wrap:wrap}
+.pill{flex:1;min-width:104px;position:relative}
+.pill input{position:absolute;opacity:0;width:0;height:0}
+.pill span{display:block;text-align:center;font-size:14px;font-weight:700;color:var(--muted);
+  background:rgba(255,255,255,.85);border:1.5px solid rgba(var(--mainRGB),.16);border-radius:13px;
+  padding:11px 8px;cursor:pointer;transition:.22s}
+.pill input:checked+span{color:#fff;border-color:transparent;
+  background:linear-gradient(135deg,var(--main),var(--azure));box-shadow:0 8px 18px -8px rgba(var(--mainRGB),.8)}
+
+/* 評核題目 */
+.dom{margin:22px 0 4px;display:flex;align-items:center;gap:9px}
+.dom:first-of-type{margin-top:4px}
+.dom b{font-size:13.5px;font-weight:800;color:var(--main);white-space:nowrap}
+.dom i{flex:1;height:1px;background:linear-gradient(90deg,rgba(var(--mainRGB),.28),transparent)}
+.dom em{font-style:normal;font-size:11px;color:var(--muted);font-weight:600}
+
+.q{padding:14px 0;border-bottom:1px dashed rgba(var(--mainRGB),.16)}
+.q:last-of-type{border-bottom:0;padding-bottom:2px}
+.q.pending{background:linear-gradient(90deg,rgba(228,87,46,.07),transparent);
+  margin:0 -12px;padding-left:12px;padding-right:12px;border-radius:12px}
+.qt{display:flex;gap:10px;font-size:14.5px;font-weight:600;line-height:1.6;margin-bottom:6px}
+.qn{flex:none;width:24px;height:24px;border-radius:8px;display:grid;place-items:center;font-size:12px;font-weight:900;
+  background:rgba(var(--mainRGB),.1);color:var(--main);margin-top:2px;transition:.25s}
+.q.done .qn{background:linear-gradient(140deg,var(--deep),var(--main));color:#fff}
+.qhint{font-size:11.5px;color:var(--muted);background:rgba(var(--mainRGB),.05);border-radius:9px;
+  padding:7px 10px;margin:0 0 10px 34px;line-height:1.55}
+.opts{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}
+.opt{position:relative}
+.opt input{position:absolute;opacity:0;width:0;height:0}
+.opt span{display:flex;align-items:center;justify-content:center;min-height:48px;padding:8px 3px;border-radius:13px;
+  cursor:pointer;text-align:center;font-size:12.5px;font-weight:700;color:var(--muted);
+  background:rgba(255,255,255,.85);border:1.5px solid rgba(var(--mainRGB),.15);transition:.2s;line-height:1.3}
+.opt input:checked+span{border-color:transparent;transform:translateY(-2px);color:#fff;
+  background:linear-gradient(150deg,var(--main),var(--azure) 70%,var(--cyan));
+  box-shadow:0 10px 20px -10px rgba(var(--mainRGB),.85)}
+.opt.na input:checked+span{background:linear-gradient(150deg,#7A8AA0,#95A5B8)}
+@media(max-width:420px){.opt span{font-size:11.5px;min-height:46px}}
+
+.notebtn{margin-top:8px;background:none;border:0;font-family:inherit;font-size:11.5px;font-weight:700;
+  color:var(--main);cursor:pointer;padding:2px 0;opacity:.8}
+.notebtn:hover{opacity:1}
+.notewrap{margin-top:8px;display:none}
+.notewrap.on{display:block}
+.notewrap input{font-size:13.5px;padding:9px 12px}
+
+.bar{position:fixed;left:0;right:0;bottom:0;z-index:40;padding:12px 16px calc(12px + env(safe-area-inset-bottom));
+  background:rgba(255,255,255,.78);backdrop-filter:blur(20px) saturate(180%);
+  -webkit-backdrop-filter:blur(20px) saturate(180%);border-top:1px solid rgba(var(--mainRGB),.14)}
+.bar-in{max-width:820px;margin:0 auto;display:flex;align-items:center;gap:12px}
+.hint{flex:1;font-size:12px;color:var(--muted);font-weight:600;line-height:1.4}
+.hint b{color:var(--warn)}
+.btn{flex:none;border:0;cursor:pointer;font-family:inherit;font-size:15.5px;font-weight:800;color:#fff;
+  padding:14px 30px;border-radius:15px;background:linear-gradient(135deg,var(--deep),var(--main) 55%,var(--azure));
+  box-shadow:0 12px 26px -12px rgba(var(--deepRGB),.85);transition:.22s}
+.btn:hover{transform:translateY(-2px)}
+.btn:disabled{opacity:.55;cursor:not-allowed;transform:none}
+.spin{display:inline-block;width:15px;height:15px;border:2.5px solid rgba(255,255,255,.35);border-top-color:#fff;
+  border-radius:50%;animation:sp .7s linear infinite;vertical-align:-2px;margin-right:7px}
+@keyframes sp{to{transform:rotate(360deg)}}
+
+.done-view{display:none;text-align:center;padding:40px 22px}
+.done-view.on{display:block;animation:up .5s cubic-bezier(.2,1,.3,1)}
+@keyframes up{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+.tick{width:76px;height:76px;margin:0 auto 20px;border-radius:50%;display:grid;place-items:center;
+  background:linear-gradient(140deg,var(--deep),var(--main));box-shadow:0 16px 34px -14px rgba(var(--deepRGB),.8)}
+.tick svg{width:36px;height:36px;stroke:#fff;stroke-width:3.4;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.done-view h2{margin:0 0 8px;font-size:22px;font-weight:900}
+.done-view p{margin:0 0 22px;color:var(--muted);font-size:14px}
+.score{display:inline-flex;align-items:baseline;gap:6px;background:rgba(var(--mainRGB),.07);
+  border:1px solid rgba(var(--mainRGB),.18);border-radius:16px;padding:14px 26px}
+.score b{font-size:38px;font-weight:900;line-height:1;
+  background:linear-gradient(135deg,var(--deep),var(--azure));-webkit-background-clip:text;background-clip:text;color:transparent}
+.score i{font-style:normal;font-size:13px;color:var(--muted);font-weight:700}
+
+.foot{text-align:center;font-size:11.5px;color:var(--footC);padding:6px 0 24px}
+.toast{position:fixed;left:50%;bottom:96px;transform:translate(-50%,20px);z-index:60;opacity:0;pointer-events:none;
+  background:var(--deep);color:#fff;font-size:13.5px;font-weight:700;padding:12px 20px;border-radius:13px;
+  box-shadow:0 14px 32px -12px rgba(var(--deepRGB),.9);transition:.3s;max-width:calc(100% - 32px)}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="bg"></div><div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div>
+
+<div class="wrap">
+
+  <div class="progress" id="progress">
+    <div class="prow">
+      <div class="ptxt" id="ptxt">0 / 0 題</div>
+      <div class="ptrack"><div class="pfill" id="pfill"></div></div>
+    </div>
+  </div>
+
+  <div id="formView">
+
+    <div class="card hero">
+      <div class="eyebrow"><span class="dot"></span><span id="eyebrowTxt">教師評核</span></div>
+      <h1>醫病溝通會談互動工作坊<br><span id="heroTitle">評核表</span></h1>
+      <p id="heroDesc">請依本次團隊演練的整體表現評核，「無法評估」不列入計分。</p>
+      <div class="meta">
+        <span class="chip">奇美醫院一般內科示範病房</span>
+        <span class="chip" id="chipQ">— 題</span>
+        <span class="chip" id="chipRound">—</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="sec-h"><div class="sec-n">1</div><div><h2>評核基本資料</h2><span>日期會自動帶出該月份的評核主題</span></div></div>
+
+      <div class="grid2">
+        <div class="field">
+          <label class="fl" for="cdate">評核日期<span class="req">*</span></label>
+          <input type="date" id="cdate">
+          <div class="hintline" id="dateHint"></div>
+        </div>
+        <div class="field">
+          <label class="fl" for="theme">評核主題<span class="req">*</span></label>
+          <select id="theme"></select>
+          <div class="hintline" id="themeHint"></div>
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="fl">評核者身份<span class="req">*</span></label>
+        <div class="pills" id="rolePills">
+          <label class="pill"><input type="radio" name="erole" value="示範中心教師" checked><span>示範中心教師</span></label>
+          <label class="pill"><input type="radio" name="erole" value="社工師"><span>社工師</span></label>
+          <label class="pill"><input type="radio" name="erole" value="其他"><span>其他</span></label>
+        </div>
+        <div id="eroleOtherWrap" style="display:none;margin-top:10px">
+          <input type="text" id="eroleOther" placeholder="請填寫評核者身份">
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="fl" for="teacher">評核者<span class="req">*</span></label>
+        <select id="teacher">
+          <option value="王淑慎" selected>王淑慎</option>
+          <option value="其他">其他（自行填寫）</option>
+        </select>
+        <div id="teacherOtherWrap" style="display:none;margin-top:10px">
+          <input type="text" id="teacherOther" placeholder="請填寫評核者姓名">
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="sec-h"><div class="sec-n">2</div><div><h2>評核項目</h2><span id="qSub">依六大核心能力分項評核</span></div></div>
+      <div class="hintline" style="margin-bottom:4px">
+        計分方式：<b>完全做到 2 分</b>、<b>部分做到 1 分</b>、<b>沒有做到 0 分</b>；勾選「無法評估」該題不列入分母。每題可另外填寫備註。
+      </div>
+      <div id="questions"></div>
+    </div>
+
+    <div class="card">
+      <div class="sec-h"><div class="sec-n">3</div><div><h2>評核回饋</h2><span>具體描述行為，比給結論更有幫助</span></div></div>
+      <div class="field">
+        <label class="fl" for="fb">整體回饋與建議<span class="req">*</span></label>
+        <textarea id="fb" placeholder="例：面對家屬反覆要求延後出院時能保持冷靜，但未主動提出長照或居家服務等替代方案，建議下次先盤點可用資源再進入協商。"></textarea>
+      </div>
+    </div>
+
+    <div class="foot">奇美醫院一般內科示範病房｜送出後資料將納入教學品質分析使用。</div>
+  </div>
+
+  <div class="card done-view" id="doneView">
+    <div class="tick"><svg viewBox="0 0 24 24"><path d="M4 12.5l5.5 5.5L20 7"/></svg></div>
+    <h2>評核已送出</h2>
+    <p id="doneMsg">感謝完成評核，紀錄已寫入訓練成效資料庫。</p>
+    <div class="score"><b id="scoreVal">0</b><i id="scoreUnit">% 達成率</i></div>
+    <div class="foot" style="margin-top:22px">
+      <span id="doneDetail"></span><br>奇美醫院一般內科示範病房｜可以關閉此頁面了。
+    </div>
+    <button class="btn" id="againBtn" style="margin-top:18px">再填一份評核表</button>
+  </div>
+
+</div>
+
+<div class="bar" id="bar">
+  <div class="bar-in">
+    <div class="hint" id="hint">請完成所有必填欄位</div>
+    <button class="btn" id="submitBtn" type="button">送出評核</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ==================================================================
+   CONFIG
+   ================================================================== */
+const GAS_URL = "https://script.google.com/macros/s/AKfycbx2RQVGSnuiZszTkLJ8hc9ZTE8Nlpe0mG7xyo2KlIXzoTFJk2SNzEjL4p6Q63IwVbWbBQ/exec";
+
+/* 三個月一 Round 的固定排程：月份 → 主題代碼 */
+const MONTH_PLAN = {
+  8:"M1", 11:"M1", 2:"M1", 5:"M1",     // 出院計劃
+  9:"M2", 12:"M2", 3:"M2", 6:"M2",     // 值班時間病情解釋
+  10:"M3", 1:"M3", 4:"M3", 7:"M3"      // 藥物過敏解釋
+};
+
+/* 評分量尺：完全做到 2、部分做到 1、沒有做到 0、無法評估不計分 */
+const SCALE = [
+  { v: 2,    label: "完全做到" },
+  { v: 1,    label: "部分做到" },
+  { v: 0,    label: "沒有做到" },
+  { v: "NA", label: "無法評估", na: true }
+];
+
+/* 三個月的配色，與學員自評表一致 */
+const THEMES_COLOR = {
+  M1: { deep:"#0A2540", navy:"#123B6B", main:"#1565D8", azure:"#2B8FFF", cyan:"#4FC3F7",
+        mainRGB:"21,101,216", azureRGB:"43,143,255", cyanRGB:"79,195,247", deepRGB:"10,37,64",
+        ice:"#EAF3FF", paper:"#F7FBFF", paperRGB:"247,251,255", muted:"#5A7392",
+        heroP:"#BFDBFF", footC:"#8AA3C0", b1:"#8FC6FF", b2:"#7FE3FF", b3:"#B9D4FF",
+        bg1:"#DCEBFF", bg2:"#E4F6FF", bg3:"#E2EFFF" },
+  M2: { deep:"#062A22", navy:"#0E4736", main:"#0E7A5B", azure:"#19A87D", cyan:"#57D9AE",
+        mainRGB:"14,122,91", azureRGB:"25,168,125", cyanRGB:"87,217,174", deepRGB:"6,42,34",
+        ice:"#E6F6EF", paper:"#F6FBF8", paperRGB:"246,251,248", muted:"#4F7A6B",
+        heroP:"#A9DCC7", footC:"#7C9E90", b1:"#8FD9BE", b2:"#7FE8CF", b3:"#B4E3D0",
+        bg1:"#DCF2E8", bg2:"#E2F7EE", bg3:"#DFF1E8" },
+  M3: { deep:"#2A1245", navy:"#43206B", main:"#6B2FB5", azure:"#8B5CF6", cyan:"#C4A5FF",
+        mainRGB:"107,47,181", azureRGB:"139,92,246", cyanRGB:"196,165,255", deepRGB:"42,18,69",
+        ice:"#F1EBFC", paper:"#FAF7FF", paperRGB:"250,247,255", muted:"#6E5A8A",
+        heroP:"#D8C4F5", footC:"#9B8AB5", b1:"#C7A9FF", b2:"#D9B8FF", b3:"#C9B4F5",
+        bg1:"#EDE2FC", bg2:"#F0E6FF", bg3:"#E9DDFB" }
+};
+
+/* 三份評核表題目，依 ACGME 六大核心能力分組 */
+const FORMS = {
+  M1: {
+    theme: "出院計劃",
+    months: "8、11、2、5 月",
+    domains: [
+      { name: "病人照護", items: [
+        "能正確解釋病人泌尿道感染與低血鈉的現況與出院標準",
+        "能將醫學資訊轉化為家屬易懂的語言，清晰解釋病況",
+        "能針對家屬擔憂，主動提出多種具體可行的居家照顧方案",
+        "溝通中展現以病人最佳利益為中心的態度" ] },
+      { name: "醫學知識", items: [
+        "能清楚區分急性病程治療與慢性功能恢復的差異",
+        "運用適當醫學知識支持溝通內容與論點" ] },
+      { name: "人際溝通技巧", items: [
+        "了解溝通中非語言訊息（如眼神、肢體語言）的重要性",
+        "能專注傾聽家屬的擔憂，並適時表達同理心",
+        "能以清晰、簡潔、避免醫學術語的方式傳達訊息",
+        "面對家屬焦慮或堅持時，能保持冷靜並有效回應",
+        "能引導家屬朝向合理的出院計畫達成共識" ] },
+      { name: "專業素養", items: [
+        "溝通中能適當設下專業界線，不輕易承諾無法達成的要求",
+        "忠實傳達醫學資訊，不隱瞞或誇大" ] },
+      { name: "制度下之臨床工作", items: [
+        "能善用社會資源, 安排出院計劃 (居家、長照、機構..)",
+        "若家屬堅持不出院，是否考慮出院準備、社工、個管師加入協調？" ] },
+      { name: "從工作中學習與改進", items: [
+        "能對自己的表現進行初步反思，提出可改進處" ] }
+    ]
+  },
+
+  M2: {
+    theme: "值班時間病情解釋",
+    months: "9、12、3、6 月",
+    domains: [
+      { name: "病人照護", items: [
+        "與家屬溝通前，是否能了解病史/病歷，掌握病人前生命徵象、呼吸狀況、血氧及發燒等關鍵資訊。" ] },
+      { name: "醫學知識", items: [
+        "是否能根據手頭資料，判斷病人目前狀況是否穩定，並據此決定病情解釋的範圍和深度" ] },
+      { name: "人際溝通技巧", items: [
+        "初次接觸家屬時，是否能清晰地向家屬介紹自己的身分",
+        "是否能主動且禮貌地詢問家屬與病人的關係，以便確認告知權",
+        "能專注傾聽家屬的擔憂，並適時表達同理心",
+        "能以清晰、簡潔、避免醫學術語的方式傳達訊息",
+        "面對家屬焦慮或潛在不滿時，能保持冷靜並有效回應",
+        "是否能委婉而堅定地說明夜間值班的限制、病人不在場的規定" ] },
+      { name: "專業素養", items: [
+        "是否清楚知曉並遵守「病人在場」時病情告知的倫理與法律規範",
+        "清楚界定值班醫師角色限制，並堅守不做超出職責的解釋 (例如:接下來的腫瘤治療計劃)" ] },
+      { name: "制度下之臨床工作", items: [
+        "並引導家屬尋求白天醫療團隊能得到更清楚之治療方向及病情解釋",
+        "是否能將此次與家屬的溝通內容，交班給白班的醫療團隊" ] },
+      { name: "從工作中學習與改進", items: [
+        "能對自己的表現進行初步反思，提出可改進處" ] }
+    ]
+  },
+
+  M3: {
+    theme: "藥物過敏解釋",
+    months: "10、1、4、7 月",
+    domains: [
+      { name: "病人照護", items: [
+        "能合宜提出接下來的處置，停下懷疑的藥",
+        "能合宜提出接下來的處置，能使用緩解症狀的藥物" ] },
+      { name: "醫學知識", items: [
+        "能評估藥物史，並找出可能造成過敏的藥物",
+        "能換成不同類別的抗生素" ] },
+      { name: "人際溝通技巧", items: [
+        { text: "能同理並回應病人的焦慮與質疑",
+          hint: "有做到：有用同理及回應病人的焦慮與質疑　部分做到：只有回應病人的焦慮與質疑" },
+        "能用病人聽得懂的語言解釋抗生素使用的必要性",
+        "能取得病人的同意換另一個抗生素進行接下來的治療" ] },
+      { name: "專業素養", items: [
+        "面對病人質疑時態度冷靜、負責",
+        "尊重病人自主，未以命令口吻強迫接受新的藥物" ] },
+      { name: "制度下之臨床工作", items: [
+        "能運用跨團隊的資源(皮膚科、藥師或是感染科醫師)",
+        "能表示將懷疑的藥物記錄於病歷/健保卡或寫給病人" ] },
+      { name: "從工作中學習與改進", items: [
+        "能對自己的表現進行初步反思，提出可改進處" ] }
+    ]
+  }
+};
+
+/* ================= 工具 ================= */
+const $ = id => document.getElementById(id);
+const esc = s => String(s == null ? "" : s)
+  .replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+
+let CURRENT = "M1";
+let MANUAL  = false;   // 使用者是否手動指定主題
+let FLAT    = [];      // 攤平後的題目清單
+
+function flatten(key) {
+  const list = [];
+  FORMS[key].domains.forEach(d => d.items.forEach(it => {
+    const o = typeof it === "string" ? { text: it } : it;
+    list.push({ domain: d.name, text: o.text, hint: o.hint || "" });
+  }));
+  return list;
+}
+
+function applyTheme(key) {
+  const t = THEMES_COLOR[key], root = document.documentElement.style;
+  Object.keys(t).forEach(k => root.setProperty("--" + k, t[k]));
+  document.querySelector('meta[name="theme-color"]').setAttribute("content", t.deep);
+}
+
+const rocDate = d => `${d.getFullYear() - 1911}年${d.getMonth() + 1}月${d.getDate()}日`;
+
+/* ================= 建立畫面 ================= */
+$("theme").innerHTML = Object.keys(FORMS)
+  .map(k => `<option value="${k}">${esc(FORMS[k].theme)}（${esc(FORMS[k].months)}）</option>`).join("");
+
+$("cdate").value = new Date().toLocaleDateString("sv-SE");
+
+function planFor(dateStr) {
+  const m = Number(String(dateStr).split("-")[1]);
+  return MONTH_PLAN[m] || null;
+}
+
+function syncFromDate(userChanged) {
+  const v = $("cdate").value;
+  if (!v) { $("dateHint").textContent = ""; return; }
+  const d = new Date(v + "T00:00:00");
+  const plan = planFor(v);
+
+  if (plan) {
+    $("dateHint").innerHTML = `${rocDate(d)}　→　排定主題：<b>${esc(FORMS[plan].theme)}</b>`;
+    if (!MANUAL && plan !== CURRENT) switchTheme(plan, true);
+    else if (!MANUAL) { $("themeHint").innerHTML = "已依評核日期自動帶出，如需更換請直接選擇"; }
+    if (MANUAL && plan !== CURRENT)
+      $("themeHint").innerHTML = `<b>已手動指定</b>，與該月排定的「${esc(FORMS[plan].theme)}」不同`;
+  } else {
+    $("dateHint").innerHTML = `${rocDate(d)}　→　此月份無排定主題，請自行選擇`;
+  }
+  updateProgress();
+}
+
+function switchTheme(key, auto) {
+  const answered = FLAT.length && countAnswered() > 0;
+  if (answered && key !== CURRENT) {
+    if (!confirm("更換評核主題會清除已填的評核結果，確定要更換嗎？")) {
+      $("theme").value = CURRENT;
+      return;
+    }
+  }
+  CURRENT = key;
+  $("theme").value = key;
+  applyTheme(key);
+  buildQuestions();
+  const f = FORMS[key];
+  $("heroTitle").textContent = f.theme + "　評核表";
+  $("eyebrowTxt").textContent = "教師評核 · " + key;
+  $("chipQ").textContent = FLAT.length + " 題評核項目";
+  $("chipRound").textContent = f.months + "　開課";
+  $("qSub").textContent = `${f.theme}｜共 ${FLAT.length} 題，依六大核心能力分項`;
+  if (auto) toast(`已自動帶出「${f.theme}」評核表`);
+  updateProgress();
+}
+
+function buildQuestions() {
+  FLAT = flatten(CURRENT);
+  let html = "", n = 0;
+  FORMS[CURRENT].domains.forEach(d => {
+    html += `<div class="dom"><b>${esc(d.name)}</b><i></i><em>${d.items.length} 題</em></div>`;
+    d.items.forEach(it => {
+      n++;
+      const o = typeof it === "string" ? { text: it } : it;
+      html += `
+        <div class="q" id="q${n}" data-q="${n}">
+          <div class="qt"><span class="qn">${n}</span><span>${esc(o.text)}</span></div>
+          ${o.hint ? `<div class="qhint">${esc(o.hint)}</div>` : ""}
+          <div class="opts">
+            ${SCALE.map(s => `
+              <label class="opt${s.na ? " na" : ""}">
+                <input type="radio" name="q${n}" value="${s.v}">
+                <span>${s.label}</span>
+              </label>`).join("")}
+          </div>
+          <button type="button" class="notebtn" data-note="${n}">＋ 備註</button>
+          <div class="notewrap" id="nw${n}">
+            <input type="text" id="note${n}" placeholder="此題的觀察或具體事例（選填）">
+          </div>
+        </div>`;
+    });
+  });
+  $("questions").innerHTML = html;
+}
+
+/* ================= 互動 ================= */
+$("rolePills").addEventListener("change", e => {
+  $("eroleOtherWrap").style.display = e.target.value === "其他" ? "block" : "none";
+});
+$("teacher").addEventListener("change", e => {
+  $("teacherOtherWrap").style.display = e.target.value === "其他" ? "block" : "none";
+});
+$("cdate").addEventListener("change", () => syncFromDate(true));
+$("theme").addEventListener("change", e => {
+  MANUAL = true;
+  switchTheme(e.target.value, false);
+  syncFromDate(false);
+});
+
+document.addEventListener("click", e => {
+  const b = e.target.closest(".notebtn");
+  if (!b) return;
+  const w = $("nw" + b.dataset.note);
+  w.classList.toggle("on");
+  b.textContent = w.classList.contains("on") ? "－ 收合備註" : "＋ 備註";
+  if (w.classList.contains("on")) $("note" + b.dataset.note).focus();
+});
+
+document.addEventListener("change", e => {
+  if (e.target.name && /^q\d+$/.test(e.target.name)) {
+    const q = e.target.closest(".q");
+    q.classList.add("done"); q.classList.remove("pending");
+  }
+  updateProgress();
+});
+document.addEventListener("input", updateProgress);
+
+function countAnswered() {
+  return FLAT.filter((_, i) => document.querySelector(`input[name="q${i+1}"]:checked`)).length;
+}
+function updateProgress() {
+  const n = countAnswered(), total = FLAT.length || 1;
+  $("pfill").style.width = (n / total * 100) + "%";
+  $("ptxt").textContent = `${n} / ${FLAT.length} 題`;
+  const miss = missing();
+  $("hint").innerHTML = miss.length ? `尚有 <b>${miss.length}</b> 項未完成` : "全部完成，可以送出了";
+}
+
+function missing() {
+  const m = [];
+  if (!$("cdate").value) m.push({ el: $("cdate"), t: "評核日期" });
+  if ($("teacher").value === "其他" && !$("teacherOther").value.trim())
+    m.push({ el: $("teacherOther"), t: "評核者姓名" });
+  const er = document.querySelector('input[name="erole"]:checked');
+  if (er && er.value === "其他" && !$("eroleOther").value.trim())
+    m.push({ el: $("eroleOther"), t: "評核者身份說明" });
+  FLAT.forEach((_, i) => {
+    if (!document.querySelector(`input[name="q${i+1}"]:checked`))
+      m.push({ el: $("q" + (i + 1)), t: `第 ${i + 1} 題`, q: true });
+  });
+  if (!$("fb").value.trim()) m.push({ el: $("fb"), t: "整體回饋與建議" });
+  return m;
+}
+
+let toastTimer;
+function toast(msg) {
+  const t = $("toast");
+  t.textContent = msg; t.classList.add("on");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove("on"), 3200);
+}
+
+/* ================= 送出 ================= */
+$("submitBtn").addEventListener("click", async () => {
+  document.querySelectorAll(".err").forEach(e => e.classList.remove("err"));
+  document.querySelectorAll(".pending").forEach(e => e.classList.remove("pending"));
+
+  const miss = missing();
+  if (miss.length) {
+    miss.forEach(m => m.q ? m.el.classList.add("pending") : m.el.classList.add("err"));
+    miss[0].el.scrollIntoView({ behavior: "smooth", block: "center" });
+    toast(`還有 ${miss.length} 項未完成：${miss[0].t}`);
+    return;
+  }
+
+  const scores = [], notes = [];
+  let got = 0, gradable = 0;
+  FLAT.forEach((q, i) => {
+    const v = document.querySelector(`input[name="q${i+1}"]:checked`).value;
+    scores.push(v);
+    if (v !== "NA") { got += Number(v); gradable++; }
+    const nv = $("note" + (i + 1)).value.trim();
+    if (nv) notes.push(`第${i + 1}題：${nv}`);
+  });
+  const max  = gradable * 2;
+  const rate = max ? Math.round(got / max * 1000) / 10 : 0;
+
+  const erole = document.querySelector('input[name="erole"]:checked').value;
+
+  const payload = {
+    formType: "teacher",
+    month: CURRENT,
+    monthName: FORMS[CURRENT].theme,
+    courseDate: $("cdate").value,
+    teacher: $("teacher").value === "其他" ? $("teacherOther").value.trim() : $("teacher").value,
+    evaluatorRole: erole === "其他" ? "其他：" + $("eroleOther").value.trim() : erole,
+    manualTheme: MANUAL,
+    scores: scores,
+    gradable: gradable,
+    got: got,
+    max: max,
+    rate: rate,
+    notes: notes.join("｜"),
+    feedback: $("fb").value.trim()
+  };
+
+  const btn = $("submitBtn");
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spin"></span>送出中';
+
+  const res = await send(payload);
+
+  if (res && res.ok) {
+    $("formView").style.display = "none";
+    $("bar").style.display = "none";
+    $("progress").style.display = "none";
+    $("scoreVal").textContent = rate.toFixed(1);
+    $("doneDetail").textContent =
+      (res.serial ? `評核序號 ${res.serial}　` : "")
+      + `${FORMS[CURRENT].theme}　得分 ${got} / ${max} 分`
+      + (gradable < FLAT.length ? `（${FLAT.length - gradable} 題無法評估未計分）` : "");
+    if (res.seq > 1) $("doneMsg").textContent = `感謝完成評核，這是本日第 ${res.seq} 場的紀錄。`;
+    $("doneView").classList.add("on");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  } else {
+    btn.disabled = false;
+    btn.textContent = "重新送出";
+    toast("送出失敗，請確認網路後再試一次");
+  }
+});
+
+$("againBtn").addEventListener("click", () => location.reload());
+
+async function send(payload) {
+  if (!GAS_URL || GAS_URL.indexOf("PASTE_") === 0) {
+    toast("尚未設定 GAS 網址（測試模式，資料未儲存）");
+    console.log("PAYLOAD:", payload);
+    return { ok: true };
+  }
+  try {
+    const res = await fetch(GAS_URL, {
+      method: "POST",
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body: JSON.stringify(payload)
+    });
+    return await res.json();
+  } catch (err) {
+    // 跨網域被擋時改用 no-cors 補送，此時讀不到回應，序號不顯示
+    try {
+      await fetch(GAS_URL, {
+        method: "POST", mode: "no-cors",
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: JSON.stringify(payload)
+      });
+      return { ok: true };
+    } catch (e2) { return { ok: false }; }
+  }
+}
+
+/* ================= 啟動 ================= */
+const initPlan = planFor($("cdate").value) || "M1";
+CURRENT = initPlan;
+switchTheme(initPlan, false);
+syncFromDate(false);
+</script>
+</body>
+</html>
