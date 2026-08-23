@@ -140,6 +140,32 @@ tr:last-child td{border-bottom:0}
 td.name{font-weight:700}
 .delta{font-weight:800}
 
+/* 師生對照 */
+.tcard{border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:10px}
+.tsh{display:flex;align-items:center;gap:9px;flex-wrap:wrap;font-size:11.5px;color:var(--muted);margin-bottom:7px}
+.tsh b{font-size:13px;font-weight:800;color:var(--ink)}
+.serial{font-family:Manrope,monospace;font-size:11px;font-weight:800;background:#EEF3FA;
+  color:var(--muted);padding:2px 8px;border-radius:6px;letter-spacing:.02em}
+.gapbar{display:flex;align-items:center;gap:10px;margin:9px 0}
+.gapbar .gl{width:104px;flex:none;font-size:12.5px;font-weight:700;line-height:1.35}
+.gapbar .gt{flex:1;position:relative;height:34px}
+.gseg{position:absolute;height:13px;border-radius:5px;transition:width .6s}
+.gseg.stu{top:0;background:linear-gradient(90deg,#2B8FFF,#1565D8)}
+.gseg.tea{top:19px;background:linear-gradient(90deg,#F0A868,#E4802E)}
+.gv{position:absolute;font-size:10.5px;font-weight:800;font-family:Manrope,sans-serif;line-height:13px}
+.gapbar .gd{width:64px;flex:none;text-align:right;font-size:13px;font-weight:800}
+.axhint{display:flex;justify-content:space-between;font-size:10.5px;color:var(--muted);
+  margin:2px 0 10px 114px;padding-right:64px}
+.rbox{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:6px}
+@media(max-width:700px){.rbox{grid-template-columns:1fr}}
+.rb{border:1px solid var(--line);border-radius:12px;padding:12px 14px}
+.rb .k{font-size:11.5px;color:var(--muted);font-weight:700}
+.rb .v{font-size:22px;font-weight:800;line-height:1.3}
+.rb .s{font-size:11px;color:var(--muted)}
+.warnbox{font-size:12px;background:#FFF6F1;border:1px solid #F5D2BF;color:#8A3520;
+  border-radius:12px;padding:11px 13px;margin-top:14px;line-height:1.65}
+.warnbox b{color:#6E2A18}
+
 .note{font-size:12px;color:var(--muted);background:#F0F5FC;border:1px dashed var(--line);
   border-radius:12px;padding:11px 13px;margin-top:14px;line-height:1.65}
 .note b{color:var(--ink)}
@@ -233,6 +259,47 @@ footer{text-align:center;font-size:11.5px;color:#94A6C0;padding:6px 0 34px}
           <input type="text" id="fbSearch" placeholder="搜尋姓名或回饋內容關鍵字">
         </div>
         <div id="fbList"></div>
+      </div>
+
+      <div class="card" id="teacherCard">
+        <h2 id="tTitle">教師評核</h2>
+        <p class="sub" id="tSub"></p>
+        <div id="tBody"></div>
+      </div>
+    </div>
+
+    <!-- ============ 師生對照 ============ -->
+    <div id="panelMatch" style="display:none">
+      <div class="card">
+        <h2>師生評核對照</h2>
+        <p class="sub">學員自評（1–4 分）與教師評核（0–2 分）換算為同一把尺「達成率 %」後比較</p>
+        <div class="rbox" id="matchKpi"></div>
+        <div class="warnbox" id="matchWarn"></div>
+      </div>
+
+      <div class="card">
+        <h2>核心能力構面落差</h2>
+        <p class="sub">同一構面下，學員自評與教師評核的達成率差距；正值代表學員給自己的分數高於教師</p>
+        <div class="axhint"><span>0%</span><span>50%</span><span>100%</span></div>
+        <div id="gapList"></div>
+        <div class="chip-l">
+          <span style="color:#1565D8"><i style="background:#1565D8"></i>學員自評</span>
+          <span style="color:#E4802E"><i style="background:#E4802E"></i>教師評核</span>
+        </div>
+        <div class="note" id="gapNote"></div>
+      </div>
+
+      <div class="card">
+        <h2>逐場次對照</h2>
+        <p class="sub">同一天同一主題的教師評核，與該場次學員自評平均並列</p>
+        <div class="tblwrap"><table id="matchTable"></table></div>
+        <div class="note" id="matchNote"></div>
+      </div>
+
+      <div class="card">
+        <h2>教師回饋原文</h2>
+        <p class="sub">教師的質性回饋，與學員自評的落差合看最有價值</p>
+        <div id="tFeedback"></div>
       </div>
     </div>
 
@@ -462,14 +529,19 @@ function render() {
         <i></i>${esc(m.month)}　${esc(m.theme)}<small>${m.n} 人</small>
       </button>`).join("") +
     `<button class="tab sep${VIEW.type === "cross" ? " on" : ""}" data-c="X" data-type="cross">
-      <i></i>跨月份分析<small>成長追蹤</small></button>`;
+      <i></i>跨月份分析<small>成長追蹤</small></button>` +
+    `<button class="tab${VIEW.type === "match" ? " on" : ""}" data-c="X" data-type="match">
+      <i></i>師生對照<small>自評準確度</small></button>`;
 
   $("tabs").querySelectorAll(".tab").forEach(b => {
     b.addEventListener("click", () => {
-      VIEW = b.dataset.type === "cross" ? { type: "cross" } : { type: "month", idx: Number(b.dataset.i) };
+      const t = b.dataset.type;
+      VIEW = t === "month" ? { type: "month", idx: Number(b.dataset.i) } : { type: t };
       $("tabs").querySelectorAll(".tab").forEach(x => x.classList.remove("on"));
       b.classList.add("on");
-      if (VIEW.type === "month") { COHORT = "ALL"; showMonth(); } else { showCross(); }
+      if (t === "month") { COHORT = "ALL"; showMonth(); }
+      else if (t === "cross") showCross();
+      else showMatch();
     });
   });
 
@@ -487,6 +559,7 @@ function kpi(list) {
 function showMonth() {
   $("panelMonth").style.display = "block";
   $("panelCross").style.display = "none";
+  $("panelMatch").style.display = "none";
 
   const m = DATA.months[VIEW.idx];
   const color = MONTH_COLOR[m.month] || "#1565D8";
@@ -582,6 +655,71 @@ function showMonth() {
     m.openLabels.map(L => `<option value="${esc(L)}">${esc(L)}</option>`).join("");
   $("fbSearch").value = "";
   renderFeedback();
+  renderMonthTeacher(m, cohortName);
+}
+
+/* ---------- 單月份的教師評核區塊 ---------- */
+function renderMonthTeacher(m, cohortName) {
+  const t = (DATA.teacher || []).find(x => x.month === m.month);
+  const card = $("teacherCard");
+
+  if (!t) {
+    card.style.display = "none";
+    return;
+  }
+  card.style.display = "block";
+
+  const sessions = COHORT === "ALL" ? t.sessions : t.sessions.filter(s => ym(s.date) === COHORT);
+  $("tTitle").textContent = `教師評核 — ${t.theme}`;
+
+  if (!sessions.length) {
+    $("tSub").textContent = cohortName;
+    $("tBody").innerHTML = '<div class="empty">此梯次尚無教師評核紀錄</div>';
+    return;
+  }
+
+  const rate = Math.round(sessions.reduce((a, s) => a + s.rate, 0) / sessions.length * 10) / 10;
+  $("tSub").textContent =
+    `${cohortName}　共 ${sessions.length} 場評核　平均達成率 ${rate.toFixed(1)}%（完全做到 2 分／部分做到 1 分／沒有做到 0 分）`;
+
+  // 逐題（依篩選後的場次重算）
+  const qs = t.questions.map((q, i) => {
+    const vals = sessions.map(s => s.scores[i]).filter(v => v !== null && !isNaN(v));
+    const dist = { 2: 0, 1: 0, 0: 0, NA: 0 };
+    sessions.forEach(s => {
+      const v = s.scores[i];
+      if (v === null || isNaN(v)) dist.NA++; else dist[v]++;
+    });
+    return { no: i + 1, label: q.label, n: vals.length, dist,
+             avg: vals.length ? Math.round(vals.reduce((a, b) => a + b, 0) / vals.length * 100) / 100 : null };
+  });
+
+  const rated = qs.filter(q => q.avg !== null);
+  const weakest = rated.slice().sort((a, b) => a.avg - b.avg)[0];
+
+  $("tBody").innerHTML = qs.map(q => {
+    const tot = sessions.length || 1;
+    const w = v => (q.dist[v] / tot * 100).toFixed(2) + "%";
+    const weak = weakest && q.no === weakest.no && q.avg < 1.6;
+    return `
+      <div class="q">
+        <div class="qtop">
+          <span class="qno">${q.no}</span>
+          <span class="qlab">${esc(q.label.replace(/^\d+\./, ""))}${weak ? ' <span class="pill">最需加強</span>' : ""}</span>
+          <span class="qavg num">${q.avg === null ? "—" : q.avg.toFixed(2)}</span>
+        </div>
+        <div class="bar">
+          <span class="s4" style="width:${w(2)}"></span>
+          <span class="s3" style="width:${w(1)}"></span>
+          <span class="s1" style="width:${w(0)}"></span>
+          <span style="width:${w("NA")};background:#D9E2EE"></span>
+        </div>
+        <div class="qmeta"><span>完全做到 ${q.dist[2]}</span><span>部分做到 ${q.dist[1]}</span>
+          <span>沒有做到 ${q.dist[0]}</span><span>無法評估 ${q.dist.NA}</span></div>
+      </div>`;
+  }).join("") +
+  `<div class="note">教師評核為<b>整組演練的整體表現</b>，一場一筆，並非逐位學員評分。
+   「無法評估」不列入該題平均。</div>`;
 }
 
 function renderFeedback() {
@@ -611,6 +749,7 @@ function renderFeedback() {
 /* ---------- 跨月份 ---------- */
 function showCross() {
   $("panelMonth").style.display = "none";
+  $("panelMatch").style.display = "none";
   $("panelCross").style.display = "block";
   document.documentElement.style.setProperty("--accent", "#0B1A3A");
 
@@ -757,6 +896,201 @@ function showCross() {
         <td class="delta ${cls}">${txt}</td>
         <td>${p.filled.length} / ${ms.length}</td></tr>`;
     }).join("")}</tbody>`;
+}
+
+/* ================= 師生對照 ================= */
+/* 換算為同一把尺：學員 1–4 → (v-1)/3；教師 0–2 → v/2；皆化為 0–100% */
+const stuPct = v => v == null ? null : Math.round((v - 1) / 3 * 1000) / 10;
+const teaPct = v => v == null ? null : Math.round(v / 2 * 1000) / 10;
+
+function pearson(xs, ys) {
+  const n = xs.length;
+  if (n < 3) return null;
+  const mx = xs.reduce((a, b) => a + b, 0) / n;
+  const my = ys.reduce((a, b) => a + b, 0) / n;
+  let sxy = 0, sxx = 0, syy = 0;
+  for (let i = 0; i < n; i++) {
+    const dx = xs[i] - mx, dy = ys[i] - my;
+    sxy += dx * dy; sxx += dx * dx; syy += dy * dy;
+  }
+  if (sxx === 0 || syy === 0) return null;
+  return Math.round(sxy / Math.sqrt(sxx * syy) * 1000) / 1000;
+}
+
+function showMatch() {
+  $("panelMonth").style.display = "none";
+  $("panelCross").style.display = "none";
+  $("panelMatch").style.display = "block";
+  document.documentElement.style.setProperty("--accent", "#0B1A3A");
+  $("hsub").textContent = "師生對照　·　學員自評準確度分析";
+
+  const T = DATA.teacher || [];
+  if (!T.length) {
+    $("matchKpi").innerHTML = "";
+    $("matchWarn").innerHTML = "目前<b>尚無教師評核紀錄</b>，無法進行師生對照。教師評核表送出第一筆資料後，此頁會自動出現分析結果。";
+    $("gapList").innerHTML = '<div class="empty">尚無資料</div>';
+    $("matchTable").innerHTML = ""; $("gapNote").textContent = "";
+    $("matchNote").textContent = ""; $("tFeedback").innerHTML = "";
+    return;
+  }
+
+  /* ---- 逐場次配對：同月份 + 同日期（找不到同日則退回同月） ---- */
+  const pairs = [];
+  T.forEach(t => {
+    const m = DATA.months.find(x => x.month === t.month);
+    t.sessions.forEach(s => {
+      let stu = m ? m.records.filter(r => r.date === s.date) : [];
+      let how = "同日";
+      if (!stu.length && m) {
+        stu = m.records.filter(r => ym(r.date) === ym(s.date));
+        how = stu.length ? "同月" : "無";
+      }
+      const sAvg = stu.length
+        ? Math.round(stu.reduce((a, r) => a + r.avg, 0) / stu.length * 100) / 100 : null;
+      pairs.push({
+        month: t.month, theme: t.theme, date: s.date, serial: s.serial, seq: s.seq,
+        teacher: s.teacher, tRate: s.rate, stuN: stu.length,
+        sRate: sAvg == null ? null : stuPct(sAvg), sAvg: sAvg, how: how,
+        gap: sAvg == null ? null : Math.round((stuPct(sAvg) - s.rate) * 10) / 10,
+        feedback: s.feedback, notes: s.notes
+      });
+    });
+  });
+  pairs.sort((a, b) => (a.date + a.month).localeCompare(b.date + b.month));
+
+  const valid = pairs.filter(p => p.sRate != null);
+  const r = pearson(valid.map(p => p.sRate), valid.map(p => p.tRate));
+  const avgGap = valid.length
+    ? Math.round(valid.reduce((a, p) => a + p.gap, 0) / valid.length * 10) / 10 : null;
+  const tAvg = pairs.length
+    ? Math.round(pairs.reduce((a, p) => a + p.tRate, 0) / pairs.length * 10) / 10 : null;
+
+  $("matchKpi").innerHTML = `
+    <div class="rb"><div class="k">可配對場次</div><div class="v num">${valid.length}</div>
+      <div class="s">共 ${pairs.length} 場教師評核</div></div>
+    <div class="rb"><div class="k">平均落差（學員 − 教師）</div>
+      <div class="v num ${avgGap == null ? "" : avgGap > 0 ? "down" : "up"}">
+        ${avgGap == null ? "–" : (avgGap > 0 ? "+" : "") + avgGap.toFixed(1) + "%"}</div>
+      <div class="s">${avgGap == null ? "尚無可配對資料" : avgGap > 0 ? "學員普遍給自己較高分" : "學員普遍給自己較低分"}</div></div>
+    <div class="rb"><div class="k">教師評核平均達成率</div>
+      <div class="v num">${tAvg == null ? "–" : tAvg.toFixed(1) + "%"}</div>
+      <div class="s">全部場次</div></div>`;
+
+  /* ---- 統計可信度提醒 ---- */
+  let warn = "";
+  if (valid.length < 3) {
+    warn = `目前只有 <b>${valid.length}</b> 場可配對，<b>還無法計算相關性</b>，也不宜從落差推論任何結論。
+            相關係數至少需要 3 場才算得出來，而要有參考價值通常需累積 <b>10 場以上</b>。`;
+  } else if (valid.length < 10) {
+    warn = `目前有 <b>${valid.length}</b> 場可配對，相關係數 <b>r = ${r == null ? "無法計算" : r}</b>。
+            場次數偏少，這個數字<b>波動會很大</b>，請當作趨勢參考而非結論；建議累積 10 場以上再解讀。`;
+  } else {
+    const strength = Math.abs(r) >= .7 ? "高度" : Math.abs(r) >= .4 ? "中度" : "低度";
+    warn = `共 <b>${valid.length}</b> 場可配對，相關係數 <b>r = ${r}</b>（${strength}相關）。
+            r 為正代表學員自評高的場次、教師評核也偏高；但相關不等於因果，仍須搭配回饋原文判讀。`;
+  }
+  if (pairs.some(p => p.how === "同月"))
+    warn += `<br>部分場次找不到同一天的學員自評，已退而以<b>同月份</b>配對，配對方式標示於下方表格。`;
+  $("matchWarn").innerHTML = warn;
+
+  /* ---- 核心能力構面落差 ---- */
+  const cMap = DATA.coreMap || {}, tMap = DATA.teacherCoreMap || {};
+  const names = Object.keys(cMap);
+  const rows = [];
+  names.forEach(name => {
+    DATA.months.forEach(m => {
+      const t = T.find(x => x.month === m.month);
+      const sQ = cMap[name] && cMap[name][m.month];
+      const tQs = tMap[name] && tMap[name][m.month];
+      if (!sQ || !t || !tQs) return;
+
+      const sq = m.questions[sQ - 1];
+      if (!sq || !sq.n) return;
+
+      const tv = tQs.map(no => t.questions[no - 1]).filter(q => q && q.avg != null);
+      if (!tv.length) return;
+      const tAvgQ = tv.reduce((a, q) => a + q.avg, 0) / tv.length;
+
+      rows.push({
+        name, month: m.month, theme: m.theme,
+        stu: stuPct(sq.avg), tea: teaPct(tAvgQ),
+        gap: Math.round((stuPct(sq.avg) - teaPct(tAvgQ)) * 10) / 10,
+        sQ, tQs
+      });
+    });
+  });
+
+  if (!rows.length) {
+    $("gapList").innerHTML = '<div class="empty">尚無可對照的構面資料</div>';
+    $("gapNote").textContent = "";
+  } else {
+    let html = "", lastName = "";
+    rows.forEach(x => {
+      if (x.name !== lastName) {
+        html += `<div class="dom-h" style="margin:16px 0 6px;font-size:13.5px;font-weight:800">${esc(x.name)}</div>`;
+        lastName = x.name;
+      }
+      const cls = x.gap > 5 ? "down" : x.gap < -5 ? "up" : "flat";
+      html += `
+        <div class="gapbar">
+          <span class="gl">${esc(x.month)}<br><span style="font-size:11px;color:var(--muted);font-weight:600">${esc(x.theme)}</span></span>
+          <span class="gt">
+            <i class="gseg stu" style="width:${x.stu}%"></i>
+            <b class="gv" style="left:calc(${x.stu}% + 6px);top:0;color:#1565D8">${x.stu.toFixed(0)}%</b>
+            <i class="gseg tea" style="width:${x.tea}%"></i>
+            <b class="gv" style="left:calc(${x.tea}% + 6px);top:19px;color:#E4802E">${x.tea.toFixed(0)}%</b>
+          </span>
+          <span class="gd ${cls}">${x.gap > 0 ? "+" : ""}${x.gap.toFixed(1)}</span>
+        </div>`;
+    });
+    $("gapList").innerHTML = html;
+
+    const over = rows.filter(x => x.gap > 10).sort((a, b) => b.gap - a.gap);
+    const under = rows.filter(x => x.gap < -10).sort((a, b) => a.gap - b.gap);
+    $("gapNote").innerHTML =
+      (over.length ? `落差最大的是<b>${esc(over[0].name)}（${esc(over[0].month)}）</b>，學員自評高出教師評核 ${over[0].gap.toFixed(1)} 個百分點，代表這個能力學員<b>可能高估了自己</b>，是回饋時值得特別點出的地方。` : "") +
+      (under.length ? `${over.length ? "另一方面，" : ""}<b>${esc(under[0].name)}（${esc(under[0].month)}）</b>學員自評低於教師 ${Math.abs(under[0].gap).toFixed(1)} 個百分點，學員可能<b>低估了自己</b>，適合給予肯定。` : "") +
+      (!over.length && !under.length ? "目前各構面的師生落差都在 10 個百分點以內，自評與教師觀察大致一致。" : "") +
+      `<br>注意：學員自評是<b>個人對自己</b>的評分平均，教師評核是<b>對整組表現</b>的評分，兩者觀察單位不同，落差不能直接解讀為「學員評分不準」。`;
+  }
+
+  /* ---- 逐場次表 ---- */
+  $("matchTable").innerHTML = `
+    <thead><tr><th>評核序號</th><th>月份／主題</th><th>日期</th><th>教師</th>
+      <th>學員人數</th><th>學員自評 %</th><th>教師評核 %</th><th>落差</th><th>配對</th></tr></thead>
+    <tbody>${pairs.map(p => {
+      const cls = p.gap == null ? "flat" : p.gap > 0 ? "down" : p.gap < 0 ? "up" : "flat";
+      return `<tr>
+        <td><span class="serial">${esc(p.serial || "—")}</span></td>
+        <td>${esc(p.month)}　${esc(p.theme)}</td>
+        <td>${esc(p.date)}</td>
+        <td>${esc(p.teacher || "—")}</td>
+        <td class="num">${p.stuN || "—"}</td>
+        <td class="num">${p.sRate == null ? "—" : p.sRate.toFixed(1)}</td>
+        <td class="num">${p.tRate.toFixed(1)}</td>
+        <td class="delta ${cls}">${p.gap == null ? "—" : (p.gap > 0 ? "+" : "") + p.gap.toFixed(1)}</td>
+        <td><span class="tag">${esc(p.how)}</span></td>
+      </tr>`;
+    }).join("")}</tbody>`;
+
+  $("matchNote").innerHTML =
+    `「學員自評 %」為該場次全體學員平均分換算：<b>(平均分 − 1) ÷ 3 × 100</b>；
+     「教師評核 %」為<b>得分 ÷ 滿分 × 100</b>，無法評估的題目不列入分母。
+     落差為正代表學員自評高於教師評核。`;
+
+  /* ---- 教師回饋原文 ---- */
+  const fbs = pairs.filter(p => (p.feedback || "").trim() || (p.notes || "").trim());
+  $("tFeedback").innerHTML = fbs.length
+    ? fbs.map(p => `
+        <div class="tcard">
+          <div class="tsh"><span class="serial">${esc(p.serial || "—")}</span>
+            <b>${esc(p.month)}　${esc(p.theme)}</b>
+            <span>${esc(p.date)}</span><span class="tag">${esc(p.teacher || "")}</span>
+            <span class="mini">達成率 ${p.tRate.toFixed(1)}%</span></div>
+          ${p.feedback ? `<div class="fbq">整體回饋與建議</div><div class="fbv">${esc(p.feedback)}</div>` : ""}
+          ${p.notes ? `<div class="fbq" style="margin-top:9px">各題備註</div><div class="fbv">${esc(p.notes)}</div>` : ""}
+        </div>`).join("")
+    : '<div class="empty">尚無教師回饋內容</div>';
 }
 
 /* ================= 事件 ================= */
