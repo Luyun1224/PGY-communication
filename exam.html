@@ -287,6 +287,7 @@ input.err,select.err,textarea.err{border-color:var(--warn);box-shadow:0 0 0 4px 
   <div class="bar-in">
     <div class="hint" id="hint">請完成所有必填欄位</div>
     <button class="btn secondary" id="draftBtn" type="button">暫存</button>
+    <button class="btn secondary" id="previousBtn" type="button" hidden>上一份評核</button>
     <button class="btn secondary" id="nextBtn" type="button">下一份評核</button>
     <button class="btn" id="submitBtn" type="button">送出評核</button>
   </div>
@@ -640,6 +641,20 @@ function takePendingDraft() {
   return draft;
 }
 
+function takePendingDraftByGroup(groupSeq) {
+  const drafts = pendingDrafts();
+  const index = drafts.findIndex(item => item.groupSeq === groupSeq);
+  if (index < 0) return null;
+  const [draft] = drafts.splice(index, 1);
+  if (drafts.length) localStorage.setItem(DRAFTS_KEY, JSON.stringify(drafts));
+  else localStorage.removeItem(DRAFTS_KEY);
+  return draft;
+}
+
+function updateEvaluationNav() {
+  $("previousBtn").hidden = GROUP_SEQ <= 1;
+}
+
 function restoreDraft(draft) {
   if (!draft || !FORMS[draft.current]) return false;
   GROUP_SEQ = draft.groupSeq || GROUP_SEQ;
@@ -662,22 +677,36 @@ function restoreDraft(draft) {
   });
   syncFromDate(false);
   updateProgress();
+  updateEvaluationNav();
   toast("已載入上次暫存的評核進度");
   return true;
 }
 
 $("draftBtn").addEventListener("click", saveDraft);
 
-$("nextBtn").addEventListener("click", () => {
+function navigateEvaluation(direction) {
   storePendingDraft(formState());
   localStorage.removeItem(DRAFT_KEY);
-  GROUP_SEQ++;
-  buildQuestions();
-  $("fb").value = "";
-  updateProgress();
+  const isPrevious = direction === "previous";
+  const targetSeq = isPrevious ? GROUP_SEQ - 1 : GROUP_SEQ + 1;
+  const targetDraft = takePendingDraftByGroup(targetSeq);
+
+  if (targetDraft) restoreDraft(targetDraft);
+  else {
+    GROUP_SEQ = targetSeq;
+    buildQuestions();
+    $("fb").value = "";
+    updateProgress();
+    updateEvaluationNav();
+  }
   window.scrollTo({ top: 0, behavior: "smooth" });
-  toast(`第 ${GROUP_SEQ - 1} 組已暫存，開始填寫第 ${GROUP_SEQ} 組`);
-});
+  toast(isPrevious
+    ? `已帶回第 ${GROUP_SEQ} 組的暫存內容，可繼續編輯`
+    : `第 ${GROUP_SEQ - 1} 組已暫存，開始填寫第 ${GROUP_SEQ} 組`);
+}
+
+$("previousBtn").addEventListener("click", () => navigateEvaluation("previous"));
+$("nextBtn").addEventListener("click", () => navigateEvaluation("next"));
 
 $("submitBtn").addEventListener("click", async () => {
   document.querySelectorAll(".err").forEach(e => e.classList.remove("err"));
@@ -767,6 +796,7 @@ $("againBtn").addEventListener("click", () => {
   $("submitBtn").disabled = false;
   $("submitBtn").textContent = "送出評核";
   updateProgress();
+  updateEvaluationNav();
   window.scrollTo({ top: 0, behavior: "smooth" });
   toast(pending ? `已回到第 ${GROUP_SEQ} 組的暫存進度` : `開始填寫第 ${GROUP_SEQ} 組，評核者資料已保留`);
 });
@@ -805,6 +835,7 @@ try { savedDraft = JSON.parse(localStorage.getItem(DRAFT_KEY)); } catch (e) { lo
 if (!restoreDraft(savedDraft)) {
   switchTheme(initPlan, false);
   syncFromDate(false);
+  updateEvaluationNav();
 }
 </script>
 </body>
