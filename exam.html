@@ -156,6 +156,9 @@ input.err,select.err,textarea.err{border-color:var(--warn);box-shadow:0 0 0 4px 
   box-shadow:0 12px 26px -12px rgba(var(--deepRGB),.85);transition:.22s}
 .btn:hover{transform:translateY(-2px)}
 .btn:disabled{opacity:.55;cursor:not-allowed;transform:none}
+.btn.secondary{color:var(--main);background:rgba(255,255,255,.88);border:1.5px solid rgba(var(--mainRGB),.25);
+  box-shadow:none;padding-left:20px;padding-right:20px}
+@media(max-width:560px){.bar-in{gap:8px}.hint{display:none}.btn{flex:1;padding-left:12px;padding-right:12px}}
 .spin{display:inline-block;width:15px;height:15px;border:2.5px solid rgba(255,255,255,.35);border-top-color:#fff;
   border-radius:50%;animation:sp .7s linear infinite;vertical-align:-2px;margin-right:7px}
 @keyframes sp{to{transform:rotate(360deg)}}
@@ -239,6 +242,7 @@ input.err,select.err,textarea.err{border-color:var(--warn);box-shadow:0 0 0 4px 
         <label class="fl" for="teacher">評核者<span class="req">*</span></label>
         <select id="teacher">
           <option value="王淑慎" selected>王淑慎</option>
+          <option value="王慧娟">王慧娟</option>
           <option value="其他">其他（自行填寫）</option>
         </select>
         <div id="teacherOtherWrap" style="display:none;margin-top:10px">
@@ -258,7 +262,7 @@ input.err,select.err,textarea.err{border-color:var(--warn);box-shadow:0 0 0 4px 
     <div class="card">
       <div class="sec-h"><div class="sec-n">3</div><div><h2>評核回饋</h2><span>具體描述行為，比給結論更有幫助</span></div></div>
       <div class="field">
-        <label class="fl" for="fb">整體回饋與建議<span class="req">*</span></label>
+        <label class="fl" for="fb">整體回饋與建議<span class="hintline">（選填）</span></label>
         <textarea id="fb" placeholder="例：面對家屬反覆要求延後出院時能保持冷靜，但未主動提出長照或居家服務等替代方案，建議下次先盤點可用資源再進入協商。"></textarea>
       </div>
     </div>
@@ -274,7 +278,7 @@ input.err,select.err,textarea.err{border-color:var(--warn);box-shadow:0 0 0 4px 
     <div class="foot" style="margin-top:22px">
       <span id="doneDetail"></span><br>奇美醫院一般內科示範病房｜可以關閉此頁面了。
     </div>
-    <button class="btn" id="againBtn" style="margin-top:18px">再填一份評核表</button>
+    <button class="btn" id="againBtn" style="margin-top:18px">續填下一組</button>
   </div>
 
 </div>
@@ -282,6 +286,7 @@ input.err,select.err,textarea.err{border-color:var(--warn);box-shadow:0 0 0 4px 
 <div class="bar" id="bar">
   <div class="bar-in">
     <div class="hint" id="hint">請完成所有必填欄位</div>
+    <button class="btn secondary" id="draftBtn" type="button">暫存</button>
     <button class="btn" id="submitBtn" type="button">送出評核</button>
   </div>
 </div>
@@ -420,6 +425,8 @@ const esc = s => String(s == null ? "" : s)
 let CURRENT = "M1";
 let MANUAL  = false;   // 使用者是否手動指定主題
 let FLAT    = [];      // 攤平後的題目清單
+let GROUP_SEQ = 1;     // 本次連續評核的組別序號
+const DRAFT_KEY = "teacherEvaluationDraft";
 
 function flatten(key) {
   const list = [];
@@ -521,6 +528,10 @@ function buildQuestions() {
 /* ================= 互動 ================= */
 $("rolePills").addEventListener("change", e => {
   $("eroleOtherWrap").style.display = e.target.value === "其他" ? "block" : "none";
+  if (e.target.value === "社工師") {
+    $("teacher").value = "王慧娟";
+    $("teacherOtherWrap").style.display = "none";
+  }
 });
 $("teacher").addEventListener("change", e => {
   $("teacherOtherWrap").style.display = e.target.value === "其他" ? "block" : "none";
@@ -573,7 +584,6 @@ function missing() {
     if (!document.querySelector(`input[name="q${i+1}"]:checked`))
       m.push({ el: $("q" + (i + 1)), t: `第 ${i + 1} 題`, q: true });
   });
-  if (!$("fb").value.trim()) m.push({ el: $("fb"), t: "整體回饋與建議" });
   return m;
 }
 
@@ -586,6 +596,52 @@ function toast(msg) {
 }
 
 /* ================= 送出 ================= */
+function formState() {
+  const role = document.querySelector('input[name="erole"]:checked');
+  return {
+    current: CURRENT, manual: MANUAL, courseDate: $("cdate").value,
+    teacher: $("teacher").value, teacherOther: $("teacherOther").value,
+    role: role ? role.value : "", roleOther: $("eroleOther").value,
+    feedback: $("fb").value,
+    answers: FLAT.map((_, i) => {
+      const checked = document.querySelector(`input[name="q${i + 1}"]:checked`);
+      return { value: checked ? checked.value : "", note: $("note" + (i + 1)).value };
+    })
+  };
+}
+
+function saveDraft() {
+  localStorage.setItem(DRAFT_KEY, JSON.stringify(formState()));
+  toast("已暫存目前進度，可稍後再繼續填寫");
+}
+
+function restoreDraft(draft) {
+  if (!draft || !FORMS[draft.current]) return false;
+  CURRENT = draft.current;
+  MANUAL = !!draft.manual;
+  switchTheme(CURRENT, false);
+  if (draft.courseDate) $("cdate").value = draft.courseDate;
+  if (draft.teacher) $("teacher").value = draft.teacher;
+  $("teacherOther").value = draft.teacherOther || "";
+  $("teacherOtherWrap").style.display = draft.teacher === "其他" ? "block" : "none";
+  const role = document.querySelector(`input[name="erole"][value="${draft.role}"]`);
+  if (role) role.checked = true;
+  $("eroleOther").value = draft.roleOther || "";
+  $("eroleOtherWrap").style.display = draft.role === "其他" ? "block" : "none";
+  $("fb").value = draft.feedback || "";
+  (draft.answers || []).forEach((answer, i) => {
+    const input = document.querySelector(`input[name="q${i + 1}"][value="${answer.value}"]`);
+    if (input) { input.checked = true; input.closest(".q").classList.add("done"); }
+    if ($("note" + (i + 1))) $("note" + (i + 1)).value = answer.note || "";
+  });
+  syncFromDate(false);
+  updateProgress();
+  toast("已載入上次暫存的評核進度");
+  return true;
+}
+
+$("draftBtn").addEventListener("click", saveDraft);
+
 $("submitBtn").addEventListener("click", async () => {
   document.querySelectorAll(".err").forEach(e => e.classList.remove("err"));
   document.querySelectorAll(".pending").forEach(e => e.classList.remove("pending"));
@@ -636,6 +692,7 @@ $("submitBtn").addEventListener("click", async () => {
   const res = await send(payload);
 
   if (res && res.ok) {
+    localStorage.removeItem(DRAFT_KEY);
     $("formView").style.display = "none";
     $("bar").style.display = "none";
     $("progress").style.display = "none";
@@ -645,6 +702,7 @@ $("submitBtn").addEventListener("click", async () => {
       + `${FORMS[CURRENT].theme}　得分 ${got} / ${max} 分`
       + (gradable < FLAT.length ? `（${FLAT.length - gradable} 題無法評估未計分）` : "");
     if (res.seq > 1) $("doneMsg").textContent = `感謝完成評核，這是本日第 ${res.seq} 場的紀錄。`;
+    else $("doneMsg").textContent = `第 ${GROUP_SEQ} 組評核已完成，可直接續填下一組。`;
     $("doneView").classList.add("on");
     window.scrollTo({ top: 0, behavior: "smooth" });
   } else {
@@ -654,7 +712,20 @@ $("submitBtn").addEventListener("click", async () => {
   }
 });
 
-$("againBtn").addEventListener("click", () => location.reload());
+$("againBtn").addEventListener("click", () => {
+  GROUP_SEQ++;
+  buildQuestions();
+  $("fb").value = "";
+  $("doneView").classList.remove("on");
+  $("formView").style.display = "block";
+  $("bar").style.display = "block";
+  $("progress").style.display = "block";
+  $("submitBtn").disabled = false;
+  $("submitBtn").textContent = "送出評核";
+  updateProgress();
+  window.scrollTo({ top: 0, behavior: "smooth" });
+  toast(`開始填寫第 ${GROUP_SEQ} 組，評核者資料已保留`);
+});
 
 async function send(payload) {
   if (!GAS_URL || GAS_URL.indexOf("PASTE_") === 0) {
@@ -685,8 +756,12 @@ async function send(payload) {
 /* ================= 啟動 ================= */
 const initPlan = planFor($("cdate").value) || "M1";
 CURRENT = initPlan;
-switchTheme(initPlan, false);
-syncFromDate(false);
+let savedDraft = null;
+try { savedDraft = JSON.parse(localStorage.getItem(DRAFT_KEY)); } catch (e) { localStorage.removeItem(DRAFT_KEY); }
+if (!restoreDraft(savedDraft)) {
+  switchTheme(initPlan, false);
+  syncFromDate(false);
+}
 </script>
 </body>
 </html>
