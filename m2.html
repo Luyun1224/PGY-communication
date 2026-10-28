@@ -200,7 +200,7 @@ input.err,select.err,textarea.err{border-color:var(--warn);box-shadow:0 0 0 4px 
       <p>課程結束後請憑今天的實際演練狀況作答，這份自評只用於了解訓練成效，不列入考核。</p>
       <div class="meta">
         <span class="chip">奇美醫院一般內科示範病房</span>
-        <span class="chip">8 題自評 + 2 題回饋</span>
+        <span class="chip">8 題自評 + 3 題回饋</span>
         <span class="chip">約 3 分鐘</span>
       </div>
     </div>
@@ -241,6 +241,10 @@ input.err,select.err,textarea.err{border-color:var(--warn);box-shadow:0 0 0 4px 
       <div class="field">
         <label class="fl" for="hard">我覺得最困難的部分是<span class="req">*</span></label>
         <textarea id="hard" placeholder="例：家屬要求再住院一週，我不知道怎麼拒絕又不讓對方覺得被推走。"></textarea>
+      </div>
+      <div class="field">
+        <label class="fl" for="suggest">課程回饋與建議（選填）</label>
+        <textarea id="suggest" placeholder="例：希望增加家屬情緒激動時的演練情境，或延長每組回饋討論的時間。"></textarea>
       </div>
     </div>
 
@@ -397,7 +401,8 @@ $("submitBtn").addEventListener("click", async () => {
     total: total,
     avg: Math.round(total / scores.length * 100) / 100,
     best: $("best").value.trim(),
-    hard: $("hard").value.trim()
+    hard: $("hard").value.trim(),
+    suggest: $("suggest").value.trim()
   };
 
   const btn = $("submitBtn");
