@@ -183,6 +183,16 @@ input.err,select.err,textarea.err{border-color:var(--warn);box-shadow:0 0 0 4px 
   box-shadow:0 14px 32px -12px rgba(var(--deepRGB),.9);transition:.3s;max-width:calc(100% - 32px)}
 .toast.on{opacity:1;transform:translate(-50%,0)}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+.group-watermark{position:fixed;inset:0;z-index:10;display:grid;place-items:center;
+  overflow:hidden;pointer-events:none;user-select:none;-webkit-user-select:none}
+.group-watermark span{color:rgba(var(--mainRGB),.08);font-size:clamp(72px,18vw,160px);
+  font-weight:900;line-height:1.2;white-space:nowrap;transform:rotate(-15deg)}
+.group-nav{position:sticky;top:0;z-index:20;background:var(--bg,#f5f7fa);padding:12px 0}
+.group-tabs{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}
+.group-tab{flex:1;min-width:90px;border:2px solid #d5dce5;border-radius:12px;padding:10px;background:white;color:#334155;cursor:pointer;font:inherit}
+.group-tab[aria-pressed="true"]{border-color:#53789c;background:#edf4fc;font-weight:700}
+.group-tab small{display:block;margin-top:4px;font-size:12px}
+.group-tab:focus-visible{outline:3px solid #53789c;outline-offset:2px}
 </style>
 </head>
 <body>
@@ -198,6 +208,13 @@ input.err,select.err,textarea.err{border-color:var(--warn);box-shadow:0 0 0 4px 
   </div>
 
   <div id="formView">
+    <div class="group-watermark" aria-hidden="true"><span id="groupWatermark">第 1 組</span></div>
+    <section class="group-nav" aria-label="分組評核切換">
+      <b id="currentGroup">目前評核：第 1 組</b>
+      <div class="group-tabs" id="groupTabs"></div>
+      <button class="btn secondary" id="addGroupBtn" type="button">＋新增一組</button>
+      <div class="hintline" id="saveStatus" role="status">點選組別即可切換；填寫內容會自動保留在此瀏覽器，完成後請逐組送出。</div>
+    </section>
 
     <div class="card hero">
       <div class="eyebrow"><span class="dot"></span><span id="eyebrowTxt">教師評核</span></div>
@@ -286,9 +303,7 @@ input.err,select.err,textarea.err{border-color:var(--warn);box-shadow:0 0 0 4px 
 <div class="bar" id="bar">
   <div class="bar-in">
     <div class="hint" id="hint">請完成所有必填欄位</div>
-    <button class="btn secondary" id="draftBtn" type="button">暫存</button>
-    <button class="btn secondary" id="previousBtn" type="button" hidden>上一份評核</button>
-    <button class="btn secondary" id="nextBtn" type="button">下一份評核</button>
+    <span class="hint">切組自動保留進度</span>
     <button class="btn" id="submitBtn" type="button">送出評核</button>
   </div>
 </div>
@@ -430,6 +445,9 @@ let FLAT    = [];      // 攤平後的題目清單
 let GROUP_SEQ = 1;     // 本次連續評核的組別序號
 const DRAFT_KEY = "teacherEvaluationDraft";
 const DRAFTS_KEY = "teacherEvaluationDrafts";
+const SENT_KEY = "teacherEvaluationSentGroups";
+let sentGroups = [];
+try { sentGroups = JSON.parse(sessionStorage.getItem(SENT_KEY)) || []; } catch (e) {}
 
 function flatten(key) {
   const list = [];
@@ -615,8 +633,16 @@ function formState(groupSeq = GROUP_SEQ) {
 }
 
 function saveDraft() {
-  localStorage.setItem(DRAFT_KEY, JSON.stringify(formState()));
-  toast("已暫存目前進度，可稍後再繼續填寫");
+  try {
+    localStorage.setItem(DRAFT_KEY, JSON.stringify(formState()));
+    storePendingDraft(formState());
+    $("saveStatus").textContent = "已自動保留於此瀏覽器；可直接切換組別，完成後請逐組送出。";
+    updateEvaluationNav();
+    return true;
+  } catch (e) {
+    $("saveStatus").textContent = "無法保留進度，請勿離開或切組；請確認瀏覽器儲存空間。";
+    return false;
+  }
 }
 
 function pendingDrafts() {
@@ -651,8 +677,30 @@ function takePendingDraftByGroup(groupSeq) {
   return draft;
 }
 
+let groupCount = Math.max(2, ...sentGroups, ...pendingDrafts().map(d => d.groupSeq || 1));
 function updateEvaluationNav() {
-  $("previousBtn").hidden = GROUP_SEQ <= 1;
+  groupCount = Math.max(groupCount, GROUP_SEQ);
+  const drafts = pendingDrafts();
+  $("currentGroup").textContent = `目前評核：第 ${GROUP_SEQ} 組`;
+  $("groupWatermark").textContent = `第 ${GROUP_SEQ} 組`;
+  $("submitBtn").textContent = `送出第 ${GROUP_SEQ} 組評核`;
+  const markup = Array.from({length:groupCount}, (_, i) => {
+    const seq = i + 1;
+    const draft = seq === GROUP_SEQ ? formState() : drafts.find(d => d.groupSeq === seq);
+    const n = draft ? draft.answers.filter(a => a.value !== "").length : 0;
+    const status = sentGroups.includes(seq) ? "已送出" : n ? `${n} / ${draft.answers.length} 題・未送出` : "尚未填寫";
+    return `<button class="group-tab" type="button" data-group="${seq}" ${sentGroups.includes(seq) ? "disabled" : ""} aria-pressed="${seq === GROUP_SEQ}">第 ${seq} 組<small>${status}</small></button>`;
+  }).join("");
+  if ($("groupTabs").children.length !== groupCount) $("groupTabs").innerHTML = markup;
+  else {
+    const template = document.createElement("div");
+    template.innerHTML = markup;
+    [...$("groupTabs").children].forEach((button, i) => {
+      button.querySelector("small").textContent = template.children[i].querySelector("small").textContent;
+      button.disabled = template.children[i].disabled;
+      button.setAttribute("aria-pressed", template.children[i].getAttribute("aria-pressed"));
+    });
+  }
 }
 
 function restoreDraft(draft) {
@@ -673,7 +721,13 @@ function restoreDraft(draft) {
   (draft.answers || []).forEach((answer, i) => {
     const input = document.querySelector(`input[name="q${i + 1}"][value="${answer.value}"]`);
     if (input) { input.checked = true; input.closest(".q").classList.add("done"); }
-    if ($("note" + (i + 1))) $("note" + (i + 1)).value = answer.note || "";
+    if ($("note" + (i + 1))) {
+      $("note" + (i + 1)).value = answer.note || "";
+      if (answer.note) {
+        $("nw" + (i + 1)).classList.add("on");
+        document.querySelector(`[data-note="${i + 1}"]`).textContent = "－ 收起備註";
+      }
+    }
   });
   syncFromDate(false);
   updateProgress();
@@ -682,31 +736,25 @@ function restoreDraft(draft) {
   return true;
 }
 
-$("draftBtn").addEventListener("click", saveDraft);
-
-function navigateEvaluation(direction) {
-  storePendingDraft(formState());
-  localStorage.removeItem(DRAFT_KEY);
-  const isPrevious = direction === "previous";
-  const targetSeq = isPrevious ? GROUP_SEQ - 1 : GROUP_SEQ + 1;
+function navigateEvaluation(targetSeq) {
+  if (sentGroups.includes(targetSeq) || targetSeq === GROUP_SEQ || !saveDraft()) return;
   const targetDraft = takePendingDraftByGroup(targetSeq);
-
   if (targetDraft) restoreDraft(targetDraft);
   else {
     GROUP_SEQ = targetSeq;
     buildQuestions();
     $("fb").value = "";
     updateProgress();
-    updateEvaluationNav();
   }
-  window.scrollTo({ top: 0, behavior: "smooth" });
-  toast(isPrevious
-    ? `已帶回第 ${GROUP_SEQ} 組的暫存內容，可繼續編輯`
-    : `第 ${GROUP_SEQ - 1} 組已暫存，開始填寫第 ${GROUP_SEQ} 組`);
+  saveDraft();
+  toast(`已切換至第 ${GROUP_SEQ} 組，其他組的填寫內容已保留`);
 }
-
-$("previousBtn").addEventListener("click", () => navigateEvaluation("previous"));
-$("nextBtn").addEventListener("click", () => navigateEvaluation("next"));
+$("groupTabs").addEventListener("click", e => {
+  const button = e.target.closest("[data-group]");
+  if (button) navigateEvaluation(Number(button.dataset.group));
+});
+$("addGroupBtn").addEventListener("click", () => navigateEvaluation(groupCount + 1));
+["input", "change"].forEach(event => $("formView").addEventListener(event, () => saveDraft()));
 
 $("submitBtn").addEventListener("click", async () => {
   document.querySelectorAll(".err").forEach(e => e.classList.remove("err"));
@@ -759,6 +807,9 @@ $("submitBtn").addEventListener("click", async () => {
 
   if (res && res.ok) {
     localStorage.removeItem(DRAFT_KEY);
+    takePendingDraftByGroup(GROUP_SEQ);
+    sentGroups.push(GROUP_SEQ);
+    sessionStorage.setItem(SENT_KEY, JSON.stringify(sentGroups));
     $("formView").style.display = "none";
     $("bar").style.display = "none";
     $("progress").style.display = "none";
@@ -785,7 +836,7 @@ $("againBtn").addEventListener("click", () => {
   const pending = takePendingDraft();
   if (pending) restoreDraft(pending);
   else {
-    GROUP_SEQ++;
+    GROUP_SEQ = Math.max(GROUP_SEQ, ...sentGroups) + 1;
     buildQuestions();
     $("fb").value = "";
   }
@@ -798,6 +849,7 @@ $("againBtn").addEventListener("click", () => {
   updateProgress();
   updateEvaluationNav();
   window.scrollTo({ top: 0, behavior: "smooth" });
+  saveDraft();
   toast(pending ? `已回到第 ${GROUP_SEQ} 組的暫存進度` : `開始填寫第 ${GROUP_SEQ} 組，評核者資料已保留`);
 });
 
