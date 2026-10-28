@@ -176,6 +176,28 @@ input.err,select.err,textarea.err{border-color:var(--warn);box-shadow:0 0 0 4px 
 .score b{font-size:38px;font-weight:900;line-height:1;
   background:linear-gradient(135deg,var(--deep),var(--azure));-webkit-background-clip:text;background-clip:text;color:transparent}
 .score i{font-style:normal;font-size:13px;color:var(--muted);font-weight:700}
+.submitted-reviews{text-align:left;margin-top:28px;border-top:1px solid rgba(var(--mainRGB),.16);padding-top:22px}
+.submitted-reviews h3{font-size:17px;margin:0 0 6px}
+.submitted-reviews>p{margin-bottom:16px;font-size:12px}
+.review{border:1px solid rgba(var(--mainRGB),.18);border-radius:14px;background:rgba(255,255,255,.7);margin-top:12px;overflow:hidden}
+.review summary{cursor:pointer;padding:16px;font-weight:800;color:var(--navy);overflow-wrap:anywhere}
+.review summary:focus-visible{outline:3px solid var(--main);outline-offset:-3px}
+.review summary small{display:block;margin:4px 0 0 18px;font-size:12px;font-weight:500;color:var(--muted)}
+.review-body{padding:0 16px 18px;overflow-wrap:anywhere}
+.review-meta{display:grid;grid-template-columns:auto 1fr;gap:5px 12px;margin:0;font-size:12px;color:var(--muted)}
+.review-meta dt{font-weight:700}.review-meta dd{margin:0;white-space:pre-wrap}
+.review-body h4{font-size:14px;margin:20px 0 8px;color:var(--navy)}
+.review-body h5{font-size:13px;margin:20px 0 8px;color:var(--main)}
+.review-body .review-feedback,.review-note{white-space:pre-wrap;line-height:1.75}
+.review-body .review-feedback{margin:0;padding:12px;border-radius:10px;background:rgba(var(--mainRGB),.06);color:var(--deep)}
+.review-questions{list-style:none;padding:0;margin:0}
+.review-questions li{padding:12px 0;border-bottom:1px dashed rgba(var(--mainRGB),.16)}
+.review-questions li:last-child{border-bottom:0}
+.review-question{font-size:13px;font-weight:600;line-height:1.65}
+.review-rating{display:inline-block;margin-top:7px;padding:3px 9px;border-radius:8px;font-size:12px;font-weight:700;
+  color:var(--main);background:rgba(var(--mainRGB),.08)}
+.review-note{font-size:12px;margin-top:9px;color:var(--deep)}
+.review-note b{color:var(--muted)}
 
 .foot{text-align:center;font-size:11.5px;color:var(--footC);padding:6px 0 24px}
 .toast{position:fixed;left:50%;bottom:96px;transform:translate(-50%,20px);z-index:60;opacity:0;pointer-events:none;
@@ -293,9 +315,14 @@ input.err,select.err,textarea.err{border-color:var(--warn);box-shadow:0 0 0 4px 
     <p id="doneMsg">感謝完成評核，紀錄已寫入訓練成效資料庫。</p>
     <div class="score"><b id="scoreVal">0</b><i id="scoreUnit">% 達成率</i></div>
     <div class="foot" style="margin-top:22px">
-      <span id="doneDetail"></span><br>奇美醫院一般內科示範病房｜可以關閉此頁面了。
+      <span id="doneDetail"></span><br>奇美醫院一般內科示範病房
     </div>
     <button class="btn" id="againBtn" style="margin-top:18px">續填下一組</button>
+    <section class="submitted-reviews" aria-labelledby="reviewsTitle">
+      <h3 id="reviewsTitle">本次已送出的評核</h3>
+      <p>點選組別可查看各題評分、觀察備註與整體回饋。</p>
+      <div id="submittedReviews"></div>
+    </section>
   </div>
 
 </div>
@@ -446,8 +473,15 @@ let GROUP_SEQ = 1;     // 本次連續評核的組別序號
 const DRAFT_KEY = "teacherEvaluationDraft";
 const DRAFTS_KEY = "teacherEvaluationDrafts";
 const SENT_KEY = "teacherEvaluationSentGroups";
+const REVIEWS_KEY = "teacherEvaluationSubmittedReviews";
 let sentGroups = [];
-try { sentGroups = JSON.parse(sessionStorage.getItem(SENT_KEY)) || []; } catch (e) {}
+let submittedReviews = [];
+try {
+  const saved = JSON.parse(sessionStorage.getItem(SENT_KEY));
+  if (Array.isArray(saved)) sentGroups = saved;
+  const reviews = JSON.parse(sessionStorage.getItem(REVIEWS_KEY));
+  if (Array.isArray(reviews)) submittedReviews = reviews;
+} catch (e) {}
 
 function flatten(key) {
   const list = [];
@@ -756,6 +790,60 @@ $("groupTabs").addEventListener("click", e => {
 $("addGroupBtn").addEventListener("click", () => navigateEvaluation(groupCount + 1));
 ["input", "change"].forEach(event => $("formView").addEventListener(event, () => saveDraft()));
 
+function renderSubmittedReviews(latestGroup) {
+  $("submittedReviews").innerHTML = [...submittedReviews]
+    .sort((a, b) => a.groupSeq - b.groupSeq)
+    .map(review => {
+      const domains = [...new Set(review.answers.map(answer => answer.domain))];
+      const questions = domains.map(domain => `
+        <h5>${esc(domain)}</h5>
+        <ol class="review-questions">${review.answers.filter(answer => answer.domain === domain).map(answer => {
+          const scale = SCALE.find(item => String(item.v) === answer.value);
+          const rating = answer.value === "NA" ? "無法評估（不計分）" : `${scale.label}（${answer.value} 分）`;
+          return `<li>
+            <div class="review-question">${answer.number}. ${esc(answer.text)}</div>
+            <span class="review-rating">${esc(rating)}</span>
+            ${answer.note ? `<div class="review-note"><b>觀察備註：</b><br>${esc(answer.note)}</div>` : ""}
+          </li>`;
+        }).join("")}</ol>`).join("");
+      return `<details class="review" ${review.groupSeq === latestGroup ? "open" : ""}>
+        <summary>第 ${esc(review.groupSeq)} 組｜${esc(review.monthName)}
+          <small>已送出 · 得分 ${esc(review.got)} / ${esc(review.max)} 分${review.max ? ` · 達成率 ${esc(review.rate)}%` : " · 無可計分題目"}</small>
+        </summary>
+        <div class="review-body">
+          <dl class="review-meta">
+            <dt>評核日期</dt><dd>${esc(review.courseDate)}</dd>
+            <dt>評核者</dt><dd>${esc(review.teacher)}（${esc(review.evaluatorRole)}）</dd>
+            ${review.serial ? `<dt>評核序號</dt><dd>${esc(review.serial)}</dd>` : ""}
+          </dl>
+          <h4>整體回饋與建議</h4>
+          <p class="review-feedback">${esc(review.feedback || "未填寫整體回饋與建議")}</p>
+          <h4>各題評核與觀察備註</h4>
+          ${questions}
+        </div>
+      </details>`;
+    }).join("");
+}
+
+function showSubmissionResult(review) {
+  $("formView").style.display = "none";
+  $("bar").style.display = "none";
+  $("progress").style.display = "none";
+  $("scoreVal").textContent = review.rate.toFixed(1);
+  $("doneDetail").textContent =
+    (review.serial ? `評核序號 ${review.serial}　` : "")
+    + `第 ${review.groupSeq} 組｜${review.monthName}　得分 ${review.got} / ${review.max} 分`
+    + (review.gradable < review.answers.length ? `（${review.answers.length - review.gradable} 題無法評估未計分）` : "");
+  const hasPending = pendingDrafts().length > 0;
+  $("doneMsg").textContent = hasPending
+    ? `第 ${review.groupSeq} 組評核已完成，可在下方查看內容，或繼續未完成的評核。`
+    : `已送出 ${submittedReviews.length} 組評核，可在下方查看各組完整內容。`;
+  $("againBtn").textContent = hasPending ? "回到未完成評核" : "續填下一組";
+  renderSubmittedReviews(review.groupSeq);
+  $("doneView").classList.add("on");
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
 $("submitBtn").addEventListener("click", async () => {
   document.querySelectorAll(".err").forEach(e => e.classList.remove("err"));
   document.querySelectorAll(".pending").forEach(e => e.classList.remove("pending"));
@@ -798,33 +886,37 @@ $("submitBtn").addEventListener("click", async () => {
     notes: notes.join("｜"),
     feedback: $("fb").value.trim()
   };
+  // 保留這次實際送出的題目與文字內容，不受下一組或日後題目調整影響。
+  const review = {
+    ...payload,
+    groupSeq: GROUP_SEQ,
+    answers: FLAT.map((question, i) => ({
+      domain: question.domain, text: question.text, number: i + 1,
+      value: scores[i], note: $("note" + (i + 1)).value.trim()
+    }))
+  };
 
   const btn = $("submitBtn");
   btn.disabled = true;
   btn.innerHTML = '<span class="spin"></span>送出中';
+  $("formView").inert = true;
 
   const res = await send(payload);
+  $("formView").inert = false;
 
   if (res && res.ok) {
     localStorage.removeItem(DRAFT_KEY);
     takePendingDraftByGroup(GROUP_SEQ);
     sentGroups.push(GROUP_SEQ);
-    sessionStorage.setItem(SENT_KEY, JSON.stringify(sentGroups));
-    $("formView").style.display = "none";
-    $("bar").style.display = "none";
-    $("progress").style.display = "none";
-    $("scoreVal").textContent = rate.toFixed(1);
-    $("doneDetail").textContent =
-      (res.serial ? `評核序號 ${res.serial}　` : "")
-      + `${FORMS[CURRENT].theme}　得分 ${got} / ${max} 分`
-      + (gradable < FLAT.length ? `（${FLAT.length - gradable} 題無法評估未計分）` : "");
-    const hasPending = pendingDrafts().length > 0;
-    if (hasPending) $("doneMsg").textContent = `第 ${GROUP_SEQ} 組評核已完成，接著可回到先前暫存的評核。`;
-    else if (res.seq > 1) $("doneMsg").textContent = `感謝完成評核，這是本日第 ${res.seq} 場的紀錄。`;
-    else $("doneMsg").textContent = `第 ${GROUP_SEQ} 組評核已完成，可直接續填下一組。`;
-    $("againBtn").textContent = hasPending ? "回到未完成評核" : "續填下一組";
-    $("doneView").classList.add("on");
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    review.serial = res.serial || "";
+    submittedReviews.push(review);
+    let retained = true;
+    try {
+      sessionStorage.setItem(SENT_KEY, JSON.stringify(sentGroups));
+      sessionStorage.setItem(REVIEWS_KEY, JSON.stringify(submittedReviews));
+    } catch (e) { retained = false; }
+    showSubmissionResult(review);
+    if (!retained) toast("評核已送出，但瀏覽器無法保留查看紀錄；請在離開此頁前確認內容。");
   } else {
     btn.disabled = false;
     btn.textContent = "重新送出";
@@ -884,7 +976,13 @@ const initPlan = planFor($("cdate").value) || "M1";
 CURRENT = initPlan;
 let savedDraft = null;
 try { savedDraft = JSON.parse(localStorage.getItem(DRAFT_KEY)); } catch (e) { localStorage.removeItem(DRAFT_KEY); }
-if (!restoreDraft(savedDraft)) {
+if (!savedDraft && submittedReviews.length) {
+  const latest = submittedReviews[submittedReviews.length - 1];
+  GROUP_SEQ = latest.groupSeq;
+  if (FORMS[latest.month]) CURRENT = latest.month;
+  switchTheme(CURRENT, false);
+  showSubmissionResult(latest);
+} else if (!restoreDraft(savedDraft)) {
   switchTheme(initPlan, false);
   syncFromDate(false);
   updateEvaluationNav();
