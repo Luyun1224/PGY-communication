@@ -200,7 +200,7 @@ input.err,select.err,textarea.err{border-color:var(--warn);box-shadow:0 0 0 4px 
       <p>課程結束後請憑今天的實際演練狀況作答，這份自評只用於了解訓練成效，不列入考核。</p>
       <div class="meta">
         <span class="chip">奇美醫院一般內科示範病房</span>
-        <span class="chip">8 題自評 + 4 題填答</span>
+        <span class="chip">8 題自評 + 5 題填答</span>
         <span class="chip">約 4 分鐘</span>
       </div>
     </div>
@@ -289,7 +289,7 @@ const CONFIG = {
     "能表示將懷疑的藥物記錄於病歷／健保卡或寫給病人"
   ],
 
-  // 開放式填答題：type 可為 text（單行）或 textarea（多行）
+  // 開放式填答題：type 可為 text（單行）或 textarea（多行）；optional: true 為選填
   openFields: [
     { id: "med",  type: "text",     label: "針對此案例的情形，我想要使用的藥物為",
       ph: "例：停用 Ceftriaxone，改用 Levofloxacin；加上 Antihistamine 緩解症狀" },
@@ -298,7 +298,9 @@ const CONFIG = {
     { id: "hard", type: "textarea", label: "我覺得最困難的部分是",
       ph: "例：家屬一直追問是不是用錯藥，我不知道怎麼回答才不會像在推卸責任。" },
     { id: "sit",  type: "textarea", label: "在工作中，哪些情境讓您覺得溝通較為困難",
-      ph: "例：需要當面說明可能與醫療處置有關的不良反應時。" }
+      ph: "例：需要當面說明可能與醫療處置有關的不良反應時。" },
+    { id: "suggest", type: "textarea", label: "課程回饋與建議", optional: true,
+      ph: "例：希望增加家屬情緒激動時的演練情境，或延長每組回饋討論的時間。" }
   ]
 };
 const MAX = CONFIG.questions.length * CONFIG.scale[0].v;
@@ -313,7 +315,7 @@ $("scoreMax").textContent = `/ ${MAX} 分　自評總分`;
 
 $("openFields").innerHTML = CONFIG.openFields.map(f => `
   <div class="field">
-    <label class="fl" for="${f.id}">${f.label}<span class="req">*</span></label>
+    <label class="fl" for="${f.id}">${f.label}${f.optional ? "（選填）" : '<span class="req">*</span>'}</label>
     ${f.type === "text"
       ? `<input type="text" id="${f.id}" placeholder="${f.ph}">`
       : `<textarea id="${f.id}" placeholder="${f.ph}"></textarea>`}
@@ -370,7 +372,7 @@ function missing() {
       m.push({ el: $("q" + (i + 1)), t: `第 ${i + 1} 題`, q: true });
   });
   CONFIG.openFields.forEach(f => {
-    if (!$(f.id).value.trim()) m.push({ el: $(f.id), t: f.label });
+    if (!f.optional && !$(f.id).value.trim()) m.push({ el: $(f.id), t: f.label });
   });
   return m;
 }
